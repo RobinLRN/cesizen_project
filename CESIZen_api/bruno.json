@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "CESIZen",
+  "name": "CESIZen_api",
   "type": "collection",
   "ignore": [
     "node_modules",
