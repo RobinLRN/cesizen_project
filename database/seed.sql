@@ -1,10 +1,15 @@
-INSERT INTO role VALUES (1, 'admin'), (2, 'user');
+-- Insertion des Rôles
+INSERT INTO role (id_role, nom_role) VALUES 
+(1, 'admin'), 
+(2, 'user');
 
-INSERT INTO utilisateur (id_utilisateur,nom, prenom, email, mot_de_passe, id_role) 
-VALUES (1,'Doe', 'John', 'john.doe@example.com', 'password123', 2),
-       (2,'Smith', 'Jane', 'jane.smith@example.com', 'password456', 2);
+-- Insertion des Utilisateurs (Correction : pseudo au lieu de nom/prenom)
+INSERT INTO utilisateur (id_utilisateur, pseudo, email, mot_de_passe, id_role) VALUES 
+(1, 'JohnDoe', 'john.doe@example.com', 'password123', 2),
+(2, 'JaneSmith', 'jane.smith@example.com', 'password456', 2);
 
-INSERT INTO emotion VALUES 
+-- Insertion des Émotions
+INSERT INTO emotion (id_emotion, nom_emotion, emotion_primare) VALUES 
 (1,'Heureux', 'Joie'),
 (2,'Serein', 'Joie'),
 (3,'Anxieux', 'Peur'),
@@ -13,17 +18,13 @@ INSERT INTO emotion VALUES
 (6,'En colère', 'Colère'),
 (7,'Fatigué', 'Fatigue');
 
+-- Insertion des Activités (Maintenant ça marchera car les utilisateurs 1 et 2 existent)
 INSERT INTO activity (id_activity, title, content, activity_type, activity_date, activity_url, id_utilisateur) VALUES 
 (1, 'Méditation guidée', 'Une session de méditation pour se détendre', 'Méditation', '2024-07-01', 'https://example.com/meditation', 1),
 (2, 'Exercice de respiration', 'Un exercice de respiration pour réduire le stress', 'Respiration', '2024-07-02', 'https://example.com/breathing', 1),
 (3, 'Yoga pour débutants', 'Une séance de yoga pour les débutants', 'Yoga', '2024-07-03', 'https://example.com/yoga', 2);
 
-INSERT INTO type_dictionnary VALUES 
-(1, 'Méditation'),
-(2, 'Respiration'),
-(3, 'Yoga');
-
-
+-- Insertion des Questions
 INSERT INTO question (id_question, contenu, val_score) VALUES
 (1, 'Décès du conjoint', 100),
 (2, 'Divorce', 73),

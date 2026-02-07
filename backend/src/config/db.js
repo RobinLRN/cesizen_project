@@ -17,5 +17,7 @@ pool.connect((err, client, release) => {
     }
     console.log('Connected to the database');
 
-    module.exports = pool;
+   
 });
+
+ module.exports = pool;
