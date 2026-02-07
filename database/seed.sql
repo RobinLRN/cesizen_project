@@ -1,0 +1,37 @@
+INSERT INTO role VALUES (1, 'admin'), (2, 'user');
+
+INSERT INTO utilisateur (id_utilisateur,nom, prenom, email, mot_de_passe, id_role) 
+VALUES (1,'Doe', 'John', 'john.doe@example.com', 'password123', 2),
+       (2,'Smith', 'Jane', 'jane.smith@example.com', 'password456', 2);
+
+INSERT INTO emotion VALUES 
+(1,'Heureux', 'Joie'),
+(2,'Serein', 'Joie'),
+(3,'Anxieux', 'Peur'),
+(4,'Stressé', 'Peur'),
+(5,'Triste', 'Tristesse'),
+(6,'En colère', 'Colère'),
+(7,'Fatigué', 'Fatigue');
+
+INSERT INTO activity (id_activity, title, content, activity_type, activity_date, activity_url, id_utilisateur) VALUES 
+(1, 'Méditation guidée', 'Une session de méditation pour se détendre', 'Méditation', '2024-07-01', 'https://example.com/meditation', 1),
+(2, 'Exercice de respiration', 'Un exercice de respiration pour réduire le stress', 'Respiration', '2024-07-02', 'https://example.com/breathing', 1),
+(3, 'Yoga pour débutants', 'Une séance de yoga pour les débutants', 'Yoga', '2024-07-03', 'https://example.com/yoga', 2);
+
+INSERT INTO type_dictionnary VALUES 
+(1, 'Méditation'),
+(2, 'Respiration'),
+(3, 'Yoga');
+
+
+INSERT INTO question (id_question, contenu, val_score) VALUES
+(1, 'Décès du conjoint', 100),
+(2, 'Divorce', 73),
+(3, 'Séparation', 65),
+(4, 'Emprisonnement', 63),
+(5, 'Décès d’un membre de la famille proche', 63),
+(6, 'Blessure ou maladie grave', 53),
+(7, 'Mariage', 50),
+(8, 'Perte d’emploi', 47),
+(9, 'Retraite', 45),
+(10, 'Changement de santé d’un membre de la famille proche', 44);
