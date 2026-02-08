@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/input.dart';
+import 'widgets/diag_input.dart';
 
 class StyleguideScreen extends StatelessWidget {
   @override
@@ -9,15 +9,13 @@ class StyleguideScreen extends StatelessWidget {
       body: ListView(
         padding: EdgeInsets.all(20),
         children: [
-          FormInput(
+          DiagInput(
             hint: "Saisissez votre adresse email", 
             controller: TextEditingController(),
             label: "Email",
             icon: Icons.email,
             ),
           SizedBox(height: 20),
-          
-          // Ajoute tes boutons, tes cartes, etc.
         ],
       ),
     );

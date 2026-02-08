@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-class FormInput extends StatelessWidget {
+class DiagInput extends StatelessWidget {
   final String label; // Le titre au-dessus (ex: "Inputs" ou "Email")
   final String hint;
   final TextEditingController controller;
   final IconData? icon;
   final String? Function(String?)? validator;
 
-  const FormInput({
+  const DiagInput({
     super.key,
     required this.label, // Nouveau paramètre obligatoire
     required this.hint,
@@ -62,7 +62,7 @@ class FormInput extends StatelessWidget {
             //focus boder
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
-              borderSide: BorderSide(color: AppColors.softPeach, width: 2.0),
+              borderSide: BorderSide(color: AppColors.drySage, width: 2.0),
             ),
           ),
         ),
