@@ -48,7 +48,7 @@ class FormInput extends StatelessWidget {
           //default input style
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: icon != null ? Icon(icon, color: AppColors.drySage) : null,
+            prefixIcon: icon != null ? Icon(icon, color: AppColors.darkCyan) : null,
             hintStyle: GoogleFonts.merriweatherSans(
               color: AppColors.drySage,
               fontSize: 16,
