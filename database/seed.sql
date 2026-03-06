@@ -5,8 +5,8 @@ INSERT INTO role (id_role, nom_role) VALUES
 
 -- Insertion des Utilisateurs (Correction : pseudo au lieu de nom/prenom)
 INSERT INTO utilisateur (id_utilisateur, pseudo, email, mot_de_passe, id_role) VALUES 
-(1, 'JohnDoe', 'john.doe@example.com', 'password123', 2),
-(2, 'JaneSmith', 'jane.smith@example.com', 'password456', 2);
+(2, 'JohnDoe', 'john.doe@example.com', 'password123', 2),
+(3, 'JaneSmith', 'jane.smith@example.com', 'password456', 2);
 
 -- Insertion des Émotions
 INSERT INTO emotion (id_emotion, nom_emotion, emotion_primare) VALUES 

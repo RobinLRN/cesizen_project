@@ -40,4 +40,26 @@ class AuthService {
   Future<void> logout() async {
     await storage.delete(key: 'jwt_token');
   }
-} 
+
+  Future<bool> register(String pseudo, String email, String password) async {
+    final url = Uri.parse('${Config.apiBaseUrl}/auth/register');
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'pseudo': pseudo, 'email': email, 'password': password}),
+      );
+
+      print('Code de retour : ${response.statusCode}');
+      print('Message du serveur : ${response.body}');
+
+      if (response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      print('Erreur de communication lors de l\'inscription :$e');
+    }
+    return false;
+  }
+}
