@@ -2,31 +2,31 @@ import 'package:cesizen/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class FormInput extends StatelessWidget {
-  final String label; // Le titre au-dessus (ex: "Inputs" ou "Email")
+  final String label;
   final String hint;
   final TextEditingController controller;
   final IconData? icon;
   final String? Function(String?)? validator;
+  final Widget? suffixIcon;
+  final bool obscureText;
 
   const FormInput({
     super.key,
-    required this.label, // Nouveau paramètre obligatoire
+    required this.label,
     required this.hint,
     required this.controller,
     this.icon,
     this.validator,
+    this.obscureText = false,
+    this.suffixIcon,
   });
-
-
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Aligne le titre à gauche
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Le titre de l'input
         Text(
           label,
           style: GoogleFonts.merriweatherSans(
@@ -35,31 +35,29 @@ class FormInput extends StatelessWidget {
             color: AppColors.tropicalTeal,
           ),
         ),
-        const SizedBox(height: 10), // Espace entre le titre et l'input
+        const SizedBox(height: 10),
         TextFormField(
           controller: controller,
           validator: validator,
-          //focus input style
+          obscureText: obscureText,
           style: GoogleFonts.merriweatherSans(
             color: AppColors.softPeach,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
-          //default input style
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: icon != null ? Icon(icon, color: AppColors.darkCyan) : null,
+            suffixIcon: suffixIcon,
             hintStyle: GoogleFonts.merriweatherSans(
               color: AppColors.drySage,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
-            //default border
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(color: AppColors.drySage, width: 1.5),
             ),
-            //focus boder
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(color: AppColors.drySage, width: 2.0),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../ui/widgets/page_layout.dart';
 import '../ui/widgets/widgets.dart';
+import '../ui/theme.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,32 +18,48 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
   String? _errorMessage;
+  bool _obscurePassword = true;
 
+  // On vérifie que les champs ne sont pas vides
   void _handleLogin() async {
+    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty){
+      setState((){
+        _errorMessage = 'Veuillez remplir tous les champs.';
+      });
+      return;
+    }
+
+    // On efface les anciennes erreurs
     setState(() {
       _isLoading = true;
       _errorMessage = null;
     });
 
-    bool sucess = await _authService.login(
+    // Appel API 
+    bool success = await _authService.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
     );
 
+    // On vérifie que la page est toujours à l'écran
+    if (!mounted) return;
+
+    // On arrête le cercle de chargement
     setState(() {
       _isLoading = false;
     });
 
-    if (sucess) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Connexion réussie!')));
-      }
+    // Gestion du résultat
+    if (success) {
+      // Redirection vers la page d'accueil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+      print("Succès ! Redirection vers la page d'accueil prête à être activée.");
     } else {
       setState(() {
-        _errorMessage =
-            'Échec de la connexion. Veuillez vérifier vos identifiants.';
+        _errorMessage = 'Identifiants incorrects. Veuillez réessayer.';
       });
     }
   }
@@ -72,13 +90,48 @@ class _LoginScreenState extends State<LoginScreen> {
               hint: 'Entrez votre mot de passe',
               controller: _passwordController,
               icon: Icons.lock,
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  color: AppColors.drySage,
+                ),
+                onPressed: (){
+                  setState((){
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
             ),
             const SizedBox(height: 50),
-            MainButton(
-              text: 'Se connecter',
-              icon: Icons.arrow_forward, 
-              onPressed: _handleLogin,
+
+            // Affichage conditionnel du message d'erreur
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Text(
+                  _errorMessage!,
+                  style: const TextStyle(
+                    color: Colors.redAccent,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
+
+            // Affichage conditionnel du chargement ou du bouton
+            _isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.tropicalTeal,
+                    ),
+                  )
+                : MainButton(
+                    text: 'Se connecter',
+                    icon: Icons.arrow_forward,
+                    onPressed: _handleLogin,
+                  ),
+
             const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(' S\'inscrire.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.tropicalTeal,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 )
@@ -107,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text('Mot de passe oublié ?',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.tropicalTeal,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             )
