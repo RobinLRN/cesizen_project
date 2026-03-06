@@ -16,6 +16,9 @@ class AuthService {
         body: jsonEncode({'email': email, 'password': password}),
       );
 
+      print('Code de retour : ${response.statusCode}');
+      print('Message du serveur : ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         // On sauvegarde le token dans le stockage sécurisé

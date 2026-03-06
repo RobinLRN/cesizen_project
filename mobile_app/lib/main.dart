@@ -1,6 +1,6 @@
+import 'package:cesizen/views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'ui/theme.dart'; 
-import 'ui/styleguide_screen.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: appTheme, 
-      home: StyleguideScreen(), 
+      theme: AppTheme.lightTheme, 
+      home: LoginScreen(), 
     );
   }
 }
