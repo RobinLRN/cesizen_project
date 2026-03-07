@@ -1,6 +1,7 @@
+import 'package:cesizen/views/register_screen.dart';
 import 'package:cesizen/views/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'ui/theme.dart'; 
+import 'ui/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme, 
-      home: LoginScreen(), 
+      theme: AppTheme.lightTheme,
+      //home: RegisterScreen(),
+      home: LoginScreen(),
     );
   }
 }

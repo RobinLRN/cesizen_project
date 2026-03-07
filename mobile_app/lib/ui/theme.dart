@@ -14,6 +14,7 @@ class AppTextStyles{
     fontSize: 32,
     fontWeight: FontWeight.w800,
     color: AppColors.tropicalTeal,
+    height: 1.5,
   );
 
   static TextStyle titleStyleH2 = GoogleFonts.merriweatherSans(

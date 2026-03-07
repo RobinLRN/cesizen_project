@@ -35,7 +35,7 @@ class MainButton extends StatelessWidget {
               style: GoogleFonts.merriweatherSans(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.softPeach,
               ),
             ),
             if (icon != null) ...[

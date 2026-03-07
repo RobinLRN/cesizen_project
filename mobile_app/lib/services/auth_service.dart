@@ -16,8 +16,8 @@ class AuthService {
         body: jsonEncode({'email': email, 'password': password}),
       );
 
-      print('Code de retour : ${response.statusCode}');
-      print('Message du serveur : ${response.body}');
+      //print('Code de retour : ${response.statusCode}');
+      //print('Message du serveur : ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -26,7 +26,7 @@ class AuthService {
         return true;
       }
     } catch (e) {
-      print('Error occurred while logging in: $e');
+      //print('Error occurred while logging in: $e');
     }
     return false;
   }
@@ -41,25 +41,30 @@ class AuthService {
     await storage.delete(key: 'jwt_token');
   }
 
-  Future<bool> register(String pseudo, String email, String password) async {
+  Future<String?> register(String pseudo, String email, String password) async {
     final url = Uri.parse('${Config.apiBaseUrl}/auth/register');
 
     try {
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'pseudo': pseudo, 'email': email, 'password': password}),
+        body: jsonEncode({
+          'pseudo': pseudo,
+          'email': email,
+          'password': password,
+        }),
       );
 
-      print('Code de retour : ${response.statusCode}');
-      print('Message du serveur : ${response.body}');
-
-      if (response.statusCode == 201) {
-        return true;
+      // Si c'est un succès (200 ou 201), on renvoie null (tout va bien)
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return null;
       }
+
+      // En cas d'erreur API, on renvoie le statut et la réponse exacte de Node.js
+      return 'Erreur ${response.statusCode} : ${response.body}';
     } catch (e) {
-      print('Erreur de communication lors de l\'inscription :$e');
+      // En cas de problème de connexion (serveur éteint, mauvaise URL...)
+      return 'Erreur de connexion : $e';
     }
-    return false;
   }
 }

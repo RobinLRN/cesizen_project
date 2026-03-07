@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../ui/widgets/page_layout.dart';
 import '../ui/widgets/widgets.dart';
-import '../ui/theme.dart';
 import 'home_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,8 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // On vérifie que les champs ne sont pas vides
   void _handleLogin() async {
-    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty){
-      setState((){
+    if (_emailController.text.trim().isEmpty ||
+        _passwordController.text.trim().isEmpty) {
+      setState(() {
         _errorMessage = 'Veuillez remplir tous les champs.';
       });
       return;
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _errorMessage = null;
     });
 
-    // Appel API 
+    // Appel API
     bool success = await _authService.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
@@ -56,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-      print("Succès ! Redirection vers la page d'accueil prête à être activée.");
     } else {
       setState(() {
         _errorMessage = 'Identifiants incorrects. Veuillez réessayer.';
@@ -71,20 +71,26 @@ class _LoginScreenState extends State<LoginScreen> {
       body: PageLayout(
         child: Column(
           children: [
-            const SizedBox(height: 10),
+            // Titre
             Text(
               'Se connecter à \n CESIZEN',
               style: Theme.of(context).textTheme.displayLarge,
               textAlign: TextAlign.center,
             ),
+
             const SizedBox(height: 50),
+
+            //Email Input
             FormInput(
               label: 'Email',
               hint: 'Entrez votre adresse email',
               controller: _emailController,
               icon: Icons.email,
             ),
+
             const SizedBox(height: 50),
+
+            //Password Input
             FormInput(
               label: 'Mot de passe',
               hint: 'Entrez votre mot de passe',
@@ -96,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
                   color: AppColors.drySage,
                 ),
-                onPressed: (){
-                  setState((){
+                onPressed: () {
+                  setState(() {
                     _obscurePassword = !_obscurePassword;
                   });
                 },
@@ -111,10 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.only(bottom: 20),
                 child: Text(
                   _errorMessage!,
-                  style: const TextStyle(
-                    color: Colors.redAccent,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.redAccent, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -136,34 +139,42 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Pas encore de compte ?',
+                Text(
+                  'Pas encore de compte ?',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 GestureDetector(
                   onTap: () {
-                    print('Redirection vers la page d\'inscription');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreen(),
+                      ),
+                    );
                   },
-                  child: Text(' S\'inscrire.',
+                  child: Text(
+                    ' S\'inscrire.',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppColors.tropicalTeal,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 print('Redirection vers la page de mot de passe oublié');
               },
-              child: Text('Mot de passe oublié ?',
+              child: Text(
+                'Mot de passe oublié ?',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.tropicalTeal,
                   fontWeight: FontWeight.w700,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
