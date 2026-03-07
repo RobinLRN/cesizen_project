@@ -1,5 +1,5 @@
 export 'boutons.dart';
-export 'card.dart';
+export 'activity_card.dart';
 export 'diag_input.dart';
 export 'form_input.dart';
 export 'navbar.dart';
