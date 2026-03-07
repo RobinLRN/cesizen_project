@@ -24,7 +24,7 @@ class CustomLogoAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Padding(
                 // Ajustement de la position du logo pour qu'il soit bien centré
                 padding: const EdgeInsets.only(bottom: 30.0),
-                child: Image.asset('assets/images/test.png', height: 60),
+                child: Image.asset('assets/images/logo_blanc.png', height: 60),
               ),
             ),
           ),
@@ -43,7 +43,7 @@ class ArcClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
-    
+
     // On commence en haut à gauche
     path.lineTo(0, size.height - 50);
 
@@ -52,15 +52,15 @@ class ArcClipper extends CustomClipper<Path> {
     // Le second point est l'arrivée à droite (à la même hauteur qu'à gauche)
     path.quadraticBezierTo(
       size.width / 2, // Position X du sommet (milieu)
-      size.height,    // Position Y du sommet (bas total)
-      size.width,     // Position X finale
+      size.height, // Position Y du sommet (bas total)
+      size.width, // Position X finale
       size.height - 50, // Position Y finale
     );
 
     // On ferme le tracé vers le haut
     path.lineTo(size.width, 0);
     path.close();
-    
+
     return path;
   }
 
