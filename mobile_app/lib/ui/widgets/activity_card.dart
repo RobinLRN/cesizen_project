@@ -1,241 +1,146 @@
 import 'package:flutter/material.dart';
+import '../../models/activity.dart';
 import '../theme.dart';
-import '../../models/resource.dart';
 
 class ActivityCard extends StatelessWidget {
-  final Resource resource;
-  final String type;
-  final List<String> categories;
-  final VoidCallback onViewDetails;
+  final Activity activity;
+  final VoidCallback onTap;
 
-  const ActivityCard({
-    super.key,
-    required this.resource,
-    required this.onViewDetails,
-    required this.type,
-    required this.categories,
-  });
+  const ActivityCard({super.key, required this.activity, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // --- PARTIE IMAGE (STACK) ---
-          Stack(
-            children: [
-              Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(15),
-                  ),
-                ),
-                // Emplacement pour Image.network(resource.coverImgLink) plus tard
-              ),
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Row(
-                  children: [
-                    _buildActionButton(Icons.favorite_border, () {}),
-                    const SizedBox(width: 10),
-                    _buildActionButton(Icons.bookmark_border, () {}),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          // --- CONTENU (PADDING) ---
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Le Stack est indispensable ici pour superposer la pilule sur l'image
+            Stack(
               children: [
-                // Catégorie et Durée
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.darkCyan),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        type,
-                        style: const TextStyle(
-                          color: AppColors.darkCyan,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(
-                      Icons.access_time,
-                      size: 16,
-                      color: AppColors.darkCyan,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      resource.readTime,
-                      style: const TextStyle(
-                        color: AppColors.darkCyan,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Titre
-                Text(
-                  resource.title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(20),
                   ),
+                  child: activity.imageUrl != null
+                      ? Image.network(
+                          activity.imageUrl!,
+                          height: 150,
+                          width: double
+                              .infinity, // Assure que l'image prenne toute la largeur
+                          fit: BoxFit.cover,
+                        )
+                      : _buildPlaceholder(),
                 ),
-
-                const SizedBox(height: 8),
-
-                // Description
-                Text(
-                  resource.description,
-                  style: TextStyle(color: Colors.grey[600], height: 1.3),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-
-                const SizedBox(height: 16),
-
-                // Auteur et Date
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.person_outline,
-                      size: 16,
-                      color: AppColors.darkCyan,
+                Positioned(
+                  top: 15,
+                  left: 15,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      resource.author,
-                      style: const TextStyle(color: AppColors.darkCyan),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    const SizedBox(width: 16),
-                    const Icon(
-                      Icons.calendar_today,
-                      size: 14,
-                      color: AppColors.darkCyan,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      "${resource.publishedAt.day}/${resource.publishedAt.month}/${resource.publishedAt.year}",
-                      style: const TextStyle(color: AppColors.darkCyan),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Catégories et Bouton
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Wrap(
-                        spacing: 8,
-                        children: categories
-                            .map(
-                              (cat) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.darkCyan.withOpacity(0.3),
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  cat,
-                                  style: const TextStyle(
-                                    color: AppColors.darkCyan,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
+                    child: Text(
+                      activity.activityType,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.drySage,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: onViewDetails,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkCyan,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text("Consulter"),
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+
+            // Le Padding est maintenant bien à l'intérieur des children de la Column
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          activity.title,
+                          style: const TextStyle(
+                            color: AppColors.drySage,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          activity.shortDescription ?? activity.content,
+                          style: const TextStyle(
+                            color: AppColors.drySage,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+
+                  // Le bouton rond avec la flèche
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: AppColors.drySage,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Color(0xFFFDFBF7),
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Fonction pour les boutons orange permanents
-  Widget _buildActionButton(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: Colors.orange,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: Colors.white, size: 20),
+  // Fonction pour afficher un fond gris si l'image n'existe pas
+  Widget _buildPlaceholder() {
+    return Container(
+      height:
+          150, // J'ai ajusté la hauteur ici aussi pour correspondre à ton image
+      width: double.infinity,
+      color: Colors.grey.shade300,
+      child: const Icon(
+        Icons.image_not_supported,
+        color: Colors.grey,
+        size: 40,
       ),
     );
   }
 }
-
-// Exemple d'utilisation :
-//On crée un objet Resource fictif en attendant l'API :
-
-// final testResource = Resource(
-//   id: 1,
-//   title: 'Activité entre amis',
-//   description: 'Une superbe activité à réaliser avec vos proches.',
-//   coverImgLink: '',
-//   readTime: '10 min',
-//   publishedAt: DateTime.now(),
-//   author: 'Charles',
-// );
-
-// Dans une page :
-
-// ActivityCard(
-//   resource: testResource,
-//   type: 'Activité',
-//   categories: const ['Communication', 'Famille'],
-//   onViewDetails: () => print('Bouton cliqué !'),
-// )
