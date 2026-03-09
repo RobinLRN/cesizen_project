@@ -1,24 +1,22 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../config.dart';
-import 'auth_service.dart';
-
+import '../models/activity.dart';
 class ActivityService {
-  Future<List<dynamic>> fetchActivities() async {
-    final token = await AuthService().getToken();
+  Future<List<Activity>> getActivities() async {
     final url = Uri.parse('${Config.apiBaseUrl}/activities');
 
     try {
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        List<dynamic> body = jsonDecode(response.body);
+
+        List<Activity> activities = body.map((dynamic item )=> Activity.fromJson(item)).toList();
+
+        return activities;
+      } else {
+        print('Erreur récupération : ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching activities: $e');

@@ -3,10 +3,11 @@ class Activity {
   final String title;
   final String content;
   final String activityType;
-  final String coverImgLink;
   final DateTime activityDate;
-  final String? ActivityUrl;
+  final String? activityUrl;
   final int idUtilisateur;
+  final String? imageUrl; 
+  final String? shortDescription; 
 
   Activity({
     required this.idActivity,
@@ -14,9 +15,10 @@ class Activity {
     required this.content,
     required this.activityType,
     required this.activityDate,
-    this.ActivityUrl,
+    this.activityUrl,
     required this.idUtilisateur,
-    required this.coverImgLink,
+    this.imageUrl,
+    this.shortDescription,
   });
 
   factory Activity.fromJson(Map<String, dynamic> json) {
@@ -26,9 +28,10 @@ class Activity {
       content: json['content'],
       activityType: json['activity_type'],
       activityDate: DateTime.parse(json['activity_date']),
-      ActivityUrl: json['activity_url'],
+      activityUrl: json['activity_url'],
       idUtilisateur: json['id_utilisateur'],
-      coverImgLink: json['cover_img_link'],
+      imageUrl: json['image_url'],
+      shortDescription: json['short_description'], 
     );
   }
 }
