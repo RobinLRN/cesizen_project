@@ -106,6 +106,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: const CustomLogoAppBar(),
       body: PageLayout(
+        child: SingleChildScrollView(
         child: Column(
           children: [
             Text(
@@ -259,6 +260,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
           ],
+        ),
         ),
       ),
     );

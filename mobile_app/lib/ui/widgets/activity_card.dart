@@ -71,7 +71,6 @@ class ActivityCard extends StatelessWidget {
               ],
             ),
 
-            // Le Padding est maintenant bien à l'intérieur des children de la Column
             Padding(
               padding: const EdgeInsets.all(15),
               child: Row(

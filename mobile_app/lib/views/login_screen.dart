@@ -69,7 +69,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: const CustomLogoAppBar(),
       body: PageLayout(
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           children: [
             // Titre
             Text(
@@ -177,6 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
