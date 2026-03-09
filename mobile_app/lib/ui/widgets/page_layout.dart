@@ -15,13 +15,11 @@ class PageLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Padding(
           // On définit ici la marge globale pour TOUTES les pages
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
           child: child, 
         ),
-      ),
     );
   }
 }
