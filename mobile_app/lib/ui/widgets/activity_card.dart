@@ -19,12 +19,24 @@ class ActivityCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3), // changes position of shadow
+              color: Color.fromRGBO(255, 255, 255, 0.1),
+              blurRadius: 1,
+              spreadRadius: 0,
+              offset: Offset(0, 1),
             ),
-          ],
+            BoxShadow(
+              color: Color.fromRGBO(50, 50, 93, 0.25),
+              blurRadius: 100,
+              spreadRadius: -20,
+              offset: Offset(0, 50),
+            ),
+            BoxShadow(
+              color: Color.fromRGBO(0, 0, 0, 0.3),
+              blurRadius: 60,
+              spreadRadius: -30,
+              offset: Offset(0, 30),
+            )
+          ]
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,7 +67,7 @@ class ActivityCard extends StatelessWidget {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

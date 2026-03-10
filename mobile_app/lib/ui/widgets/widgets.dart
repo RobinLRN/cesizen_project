@@ -6,3 +6,4 @@ export 'navbar.dart';
 export 'top_bar.dart';
 export 'top_bar_rounded.dart';
 export '../theme.dart';
+export 'category_card.dart';
