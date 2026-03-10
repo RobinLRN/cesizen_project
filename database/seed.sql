@@ -36,3 +36,24 @@ INSERT INTO question (id_question, contenu, val_score) VALUES
 (8, 'Perte d’emploi', 47),
 (9, 'Retraite', 45),
 (10, 'Changement de santé d’un membre de la famille proche', 44);
+
+
+-- Modifications de la base pour y insérer les catégories d'Activités et les relier : 
+
+-- 1. Création de la table des catégories
+CREATE TABLE category (
+    id_category SERIAL PRIMARY KEY,
+    title VARCHAR(50) NOT NULL,
+    icon_name VARCHAR(50),
+    color_code VARCHAR(10)
+);
+
+-- 2. Création de la table de liaison
+CREATE TABLE activity_category (
+    id_activity INT REFERENCES activity(id_activity) ON DELETE CASCADE,
+    id_category INT REFERENCES category(id_category) ON DELETE CASCADE,
+    PRIMARY KEY (id_activity, id_category)
+);
+
+-- 3. Suppression de l'ancienne colonne en dur
+ALTER TABLE activity DROP COLUMN activity_type;

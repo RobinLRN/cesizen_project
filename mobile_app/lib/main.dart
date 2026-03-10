@@ -1,5 +1,4 @@
 import 'package:cesizen/views/activity_screen.dart';
-import 'package:cesizen/views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'ui/theme.dart';
 
