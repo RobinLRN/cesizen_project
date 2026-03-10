@@ -13,28 +13,22 @@ class ActivityCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
+        margin: const EdgeInsets.only(bottom: 50),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+         boxShadow: [
             BoxShadow(
-              color: Color.fromRGBO(255, 255, 255, 0.1),
-              blurRadius: 1,
+              color: Color.fromRGBO(0, 0, 0, 0.16),
+              blurRadius: 6,
               spreadRadius: 0,
-              offset: Offset(0, 1),
+              offset: Offset(0, 3),
             ),
             BoxShadow(
-              color: Color.fromRGBO(50, 50, 93, 0.25),
-              blurRadius: 100,
-              spreadRadius: -20,
-              offset: Offset(0, 50),
-            ),
-            BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.3),
-              blurRadius: 60,
-              spreadRadius: -30,
-              offset: Offset(0, 30),
+              color: Color.fromRGBO(0, 0, 0, 0.23),
+              blurRadius: 6,
+              spreadRadius: 0,
+              offset: Offset(0, 3),
             )
           ]
         ),
@@ -71,7 +65,10 @@ class ActivityCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      activity.activityType,
+                      // On joint les titres avec un slash, ou on affiche un texte par défaut
+                      activity.categories.isNotEmpty 
+                          ? activity.categories.map((c) => c.title).join('/')
+                          : 'Sans catégorie',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
