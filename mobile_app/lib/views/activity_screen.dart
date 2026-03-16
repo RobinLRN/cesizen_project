@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../ui/widgets/widgets.dart';
 import '../models/activity.dart';
 import '../services/activity_service.dart';
+import '../views/category_screen.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -72,7 +73,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       Text('Catégories', style: Theme.of(context).textTheme.headlineMedium),
                       TextButton(
                         onPressed: () {
-                          print('Aller vers la page Catégories');
+                          Navigator.pushReplacement(
+                            context, 
+                            MaterialPageRoute(builder: (context) => CategoryScreen(),
+                            ),
+                          );
                         },
                         child: Text(
                           'Voir tout',
