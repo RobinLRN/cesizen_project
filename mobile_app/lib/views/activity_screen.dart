@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../ui/widgets/widgets.dart';
 import '../models/activity.dart';
 import '../services/activity_service.dart';
+import '../services/category_service.dart';
 import '../views/category_screen.dart';
+import '../models/activity_category.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -13,48 +15,70 @@ class ActivityScreen extends StatefulWidget {
 
 class _ActivityScreenState extends State<ActivityScreen> {
   final ActivityService _activityService = ActivityService();
-  late Future<List<Activity>> _activitiesFuture;
-  
+  final CategoryService _categoryService=CategoryService();
+  late Future<Map<String, dynamic>> _screenDataFuture;  
   String? _selectedCategory;
-
-  // catégories temporaires en dur
-  final List<Map<String, dynamic>> _categories = [
-    {'title': 'Sport', 'icon': Icons.sports_basketball, 'color': const Color(0xFF65B9D0)},
-    {'title': 'Stress', 'icon': Icons.brightness_high, 'color': const Color(0xFF6FB9AE)},
-    {'title': 'Santé', 'icon': Icons.medical_services, 'color': const Color(0xFF558E85)},
-    {'title': 'Méditation', 'icon': Icons.self_improvement, 'color': const Color(0xFFF1D483)},
-    {'title': 'Anxiété', 'icon': Icons.hourglass_bottom, 'color': const Color(0xFFB1AD85)},
-  ];
 
   @override
   void initState() {
     super.initState();
-    _activitiesFuture = _activityService.getActivities();
+    _screenDataFuture = _loadScreenData();
+  }
+
+  Future <Map<String, dynamic>> _loadScreenData() async {
+    final activities = await _activityService.getActivities();
+    final categories = await _categoryService.getCategories();
+
+    return {
+      'activities':activities,
+      'categories':categories,
+    };
+  }
+
+ IconData _getIconFromString(String? iconName) {
+    switch (iconName) {
+      case 'sports_basketball': return Icons.sports_basketball;
+      case 'brightness_high': return Icons.brightness_high;
+      case 'medical_services': return Icons.medical_services;
+      case 'self_improvement': return Icons.self_improvement;
+      case 'hourglass_bottom': return Icons.hourglass_bottom;
+      default: return Icons.category;
+    }
+  }
+
+  // Ta fonction de couleurs en dur, exactement comme sur l'autre page
+  Color _getColorFromTitle(String title) {
+    switch (title) {
+      case 'Sport': return const Color(0xFF65B9D0);
+      case 'Stress': return const Color(0xFF6FB9AE);
+      case 'Santé': return const Color(0xFF558E85);
+      case 'Méditation': return const Color(0xFFF1D483);
+      case 'Anxiété': return const Color(0xFFB1AD85);
+      default: return AppColors.drySage; 
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF7),
-      appBar: const CustomFullAppBar(
-        title: 'Activité',
-      ),
-      body: FutureBuilder<List<Activity>>(
-        future: _activitiesFuture,
+      appBar: const CustomLogoAppBar(),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _screenDataFuture,
         builder: (context, snapshot) { 
           if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(child: CircularProgressIndicator(color: AppColors.tropicalTeal));
           }
           if(snapshot.hasError){
-            return const Center(child: Text('Une erreur est survenue'));
+            return const Center(child: Text('Une erreur est survenue lors du chargement'));
           }
-          if(!snapshot.hasData || snapshot.data!.isEmpty){
-            return const Center(child: Text('Aucune activité disponible'));
+          if(!snapshot.hasData){
+            return const Center(child: Text('Aucune donnée disponible'));
           }
           
-          final allActivities = snapshot.data!;
+          final allActivities = snapshot.data!['activities'] as List<Activity>;
+          final allCategories = snapshot.data!['categories'] as List<ActivityCategory>;
           
-          // La fameuse étape 4 : la nouvelle condition de filtre
           final filteredActivities = _selectedCategory == null 
               ? allActivities 
               : allActivities.where((a) => a.categories.any((c) => c.title == _selectedCategory)).toList();
@@ -73,15 +97,14 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       Text('Catégories', style: Theme.of(context).textTheme.headlineMedium),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context, 
-                            MaterialPageRoute(builder: (context) => CategoryScreen(),
-                            ),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CategoryScreen()),
                           );
                         },
                         child: Text(
                           'Voir tout',
-                          style: TextStyle(color: AppColors.tropicalTeal, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: AppColors.tropicalTeal, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -94,20 +117,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   height: 100,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: _categories.length,
+                    itemCount: allCategories.length,
                     itemBuilder: (context, catIndex) {
-                      final category = _categories[catIndex];
+                      final category = allCategories[catIndex];
                       return CategoryPill(
-                        title: category['title'],
-                        icon: category['icon'],
-                        color: category['color'],
-                        isSelected: _selectedCategory == category['title'],
+                        title: category.title,
+                        icon: _getIconFromString(category.iconName),
+                        // On applique la logique de couleur ici
+                        color: _getColorFromTitle(category.title),
+                        isSelected: _selectedCategory == category.title,
                         onTap: () {
                           setState(() {
-                            if (_selectedCategory == category['title']) {
+                            if (_selectedCategory == category.title) {
                               _selectedCategory = null;
                             } else {
-                              _selectedCategory = category['title'];
+                              _selectedCategory = category.title;
                             }
                           });
                         },
@@ -119,7 +143,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
               if (index == 2) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 40),
+                  padding: const EdgeInsets.only(top: 10, bottom: 20),
                   child: Text('Activités', style: Theme.of(context).textTheme.headlineMedium),
                 );
               }

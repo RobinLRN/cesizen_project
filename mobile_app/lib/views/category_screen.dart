@@ -1,3 +1,4 @@
+import 'package:cesizen/ui/widgets/top_bar.dart';
 import 'package:flutter/material.dart';
 import '../ui/widgets/category_card.dart';
 import '../ui/theme.dart';
@@ -49,37 +50,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF7),
+      appBar: CustomFullAppBar(title: 'Catégories'),
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 30),
-            decoration: const BoxDecoration(
-              color: AppColors.darkCyan,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-            ),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Icon(
-                    Icons.arrow_back, 
-                    color: Color(0xFFF1D483),
-                    size: 28,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                const Text(
-                  'Catégories',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
           Expanded(
             child: FutureBuilder<List<ActivityCategory>>(
               future: _categoriesFuture,
