@@ -35,6 +35,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     };
   }
 
+  //fonction pour les icônes
  IconData _getIconFromString(String? iconName) {
     switch (iconName) {
       case 'sports_basketball': return Icons.sports_basketball;
@@ -46,7 +47,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
     }
   }
 
-  // Ta fonction de couleurs en dur, exactement comme sur l'autre page
+  // Fonction de couleurs
   Color _getColorFromTitle(String title) {
     switch (title) {
       case 'Sport': return const Color(0xFF65B9D0);
@@ -62,7 +63,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDFBF7),
-      appBar: const CustomLogoAppBar(),
+      appBar: const CustomFullAppBar(title: 'Activités'),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _screenDataFuture,
         builder: (context, snapshot) { 
@@ -96,16 +97,20 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     children: [
                       Text('Catégories', style: Theme.of(context).textTheme.headlineMedium),
                       TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const CategoryScreen()),
-                          );
-                        },
-                        child: Text(
-                          'Voir tout',
-                          style: TextStyle(color: AppColors.tropicalTeal, fontWeight: FontWeight.w700),
-                        ),
+                       onPressed: () async {
+                        final categorySelected = await Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryScreen()),
+                        );
+
+                        if(categorySelected != null) {
+                          setState(() {
+                            _selectedCategory = categorySelected as String;
+                          });
+                        }
+                       },
+                       child: Text(
+                        'Voir tout',
+                       style: TextStyle(color: AppColors.softPeach, fontWeight: FontWeight.w700),
+                       ),
                       ),
                     ],
                   ),

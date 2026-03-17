@@ -86,7 +86,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                       // On appelle la nouvelle fonction qui analyse le titre
                       color: _getColorFromTitle(cat.title),
                       onTap: () {
-                        print('Catégorie sélectionnée : ${cat.title}');
+                        Navigator.pop(context, cat.title);
                       },
                     );
                   },
