@@ -5,6 +5,7 @@ import '../services/activity_service.dart';
 import '../services/category_service.dart';
 import '../views/category_screen.dart';
 import '../models/activity_category.dart';
+import 'activity_detail_screen.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -157,7 +158,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
               return ActivityCard(
                 activity: activity,
                 onTap: () {
-                  print('Clic sur ${activity.title}');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ActivityDetailScreen(activity: activity),
+                    ),
+                  );
                 },
               );
             },
