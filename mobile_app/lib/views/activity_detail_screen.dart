@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart'; // Import ajouté
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../models/activity.dart';
 import '../ui/widgets/page_layout.dart';
 import '../ui/widgets/widgets.dart';
@@ -27,7 +27,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
     // Si l'activité a une URL, on prépare le lecteur
     if (widget.activity.activityUrl != null && widget.activity.activityUrl!.isNotEmpty) {
-      // 1. On essaie d'extraire l'ID (ex: dQw4w9WgXcQ) depuis l'URL complète
+      // 1. On essaie d'extraire l'ID
       final videoId = YoutubePlayer.convertUrlToId(widget.activity.activityUrl!);
 
       if (videoId != null) {
@@ -74,99 +74,90 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
       ),
       body: PageLayout(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Zone de contenu (Image ou Vidéo)
-              Padding(
-                padding: const EdgeInsets.all(25),
-                child: Container(
-                  width: double.infinity,
-                  height: 200, 
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    // Ombre douce pour faire ressortir le lecteur
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  // On utilise ClipRRect pour forcer la vidéo à avoir les bords arrondis
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: hasVideo
-                        ? YoutubePlayer(
-                            controller: _youtubeController!,
-                            showVideoProgressIndicator: true,
-                            progressIndicatorColor: Colors.amber,
-                            onReady: () {
-                              _isPlayerReady = true;
-                            },
-                            // Personnalisation des couleurs des contrôles pour ton thème zen
-                            progressColors: const ProgressBarColors(
-                              playedColor: Colors.amber,
-                              handleColor: Colors.amberAccent,
-                            ),
-                          )
-                        : (widget.activity.imageUrl != null
-                            ? Image.network(
-                                widget.activity.imageUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  // Image de secours si le lien est mort
-                                  return Container(
-                                    color: Colors.grey[300],
-                                    child: const Icon(Icons.image_not_supported, size: 50),
-                                  );
-                                },
-                              )
-                            : Container(
-                                color: Colors.grey[300],
-                                child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                              )),
-                  ),
+              Container(
+                width: double.infinity,
+                height: 200, 
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.16),
+                      blurRadius: 4,
+                      spreadRadius: 0,
+                      offset: Offset(0, 1),
+                    )
+                  ]
+                ),
+                // On utilise ClipRRect pour forcer la vidéo à avoir les bords arrondis
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: hasVideo
+                      ? YoutubePlayer(
+                          controller: _youtubeController!,
+                          showVideoProgressIndicator: true,
+                          progressIndicatorColor: AppColors.softPeach,
+                          onReady: () {
+                            _isPlayerReady = true;
+                          },
+                          // Personnalisation des couleurs des contrôles
+                          progressColors: const ProgressBarColors(
+                            playedColor: AppColors.softPeach,
+                            handleColor: AppColors.drySage,
+                          ),
+                        )
+                      : (widget.activity.imageUrl != null
+                          ? Image.network(
+                              widget.activity.imageUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Image de secours si le lien est mort
+                                return Container(
+                                  color: Colors.grey[300],
+                                  child: const Icon(Icons.image_not_supported, size: 50),
+                                );
+                              },
+                            )
+                          : Container(
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                            )),
                 ),
               ),
-
-              // Titre Description
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  'Description',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              const SizedBox(height: 30),
+              Text(
+                'Description',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 15),
 
-              // Conteneur de la description
-              Padding(
+              // Conteneur de la description sans le Padding externe
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(25),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.1),
-                        blurRadius: 10,
-                        spreadRadius: 0,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    widget.activity.content,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      height: 1.6,
-                      color: Colors.black87,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.1),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                      offset: Offset(0, 3),
                     ),
+                  ],
+                ),
+                child: Text(
+                  widget.activity.content,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    height: 1.6,
+                    color: Colors.black87,
                   ),
                 ),
               ),
