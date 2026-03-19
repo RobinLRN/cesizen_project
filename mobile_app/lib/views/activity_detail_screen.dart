@@ -74,7 +74,6 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
       ),
       body: PageLayout(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -129,7 +128,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
               ),
               const SizedBox(height: 30),
               Text(
-                'Description',
+                'Description :',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
