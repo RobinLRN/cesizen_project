@@ -6,6 +6,7 @@ const pool = require('./src/config/db');
 const authRoute = require('./src/routes/authRoute');
 const activityRoute = require('./src/routes/activityRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
+const favoriteRoute = require ('./src/routes/favoriteRoute');
 
 app.use(express.json());
 
@@ -14,6 +15,8 @@ app.use('/api/auth', authRoute);
 app.use('/api/activities', activityRoute);
 
 app.use('/api/categories', categoryRoute);
+
+app.use('/api/favorite', favoriteRoute);
 
 pool.connect((err, client, release) => {
     if (err) {

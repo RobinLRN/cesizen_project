@@ -23,3 +23,21 @@ exports.toggleFavorite = async (req, res) => {
         res.status(500).json({error:'Erreur serveur'});
     }
 };
+
+
+exports.checkFavorite = async (req, res) => {
+  // Pour une requête GET, on récupère les variables dans l'URL (req.query)
+  const { id_utilisateur, id_activity } = req.query;
+
+  try {
+    const checkQuery = 'SELECT * FROM favorite WHERE id_utilisateur = $1 AND id_activity = $2';
+    // Assure-toi que 'pool' est bien importé en haut de ton fichier controller
+    const checkResult = await pool.query(checkQuery, [id_utilisateur, id_activity]);
+
+    // On renvoie true si on trouve une correspondance en base de données, sinon false
+    return res.status(200).json({ isFavorite: checkResult.rows.length > 0 });
+  } catch (error) {
+    console.error('Erreur lors de la vérification du favori:', error);
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
