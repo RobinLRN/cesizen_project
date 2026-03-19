@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart'; // Import ajouté
 import '../models/activity.dart';
 import '../ui/widgets/page_layout.dart';
 import '../ui/widgets/widgets.dart';
@@ -16,16 +17,58 @@ class ActivityDetailScreen extends StatefulWidget {
 }
 
 class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
-  bool _isFavorite = false;
+  // Le contrôleur qui va gérer la vidéo
+  YoutubePlayerController? _youtubeController;
+  bool _isPlayerReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Si l'activité a une URL, on prépare le lecteur
+    if (widget.activity.activityUrl != null && widget.activity.activityUrl!.isNotEmpty) {
+      // 1. On essaie d'extraire l'ID (ex: dQw4w9WgXcQ) depuis l'URL complète
+      final videoId = YoutubePlayer.convertUrlToId(widget.activity.activityUrl!);
+
+      if (videoId != null) {
+        // 2. On configure le contrôleur avec l'ID trouvé
+        _youtubeController = YoutubePlayerController(
+          initialVideoId: videoId,
+          flags: const YoutubePlayerFlags(
+            autoPlay: false, // Ne pas lancer automatiquement
+            mute: false,
+            isLive: false,
+          ),
+        )..addListener(_listener); // On ajoute un écouteur pour gérer les états
+      }
+    }
+  }
+
+  // Petite fonction pour écouter si le lecteur est prêt à s'afficher
+  void _listener() {
+    
+  }
+
+  @override
+  void deactivate() {
+    // Pauser la vidéo si on quitte la page
+    _youtubeController?.pause();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    // Libérer la mémoire du contrôleur quand on ferme définitivement la page
+    _youtubeController?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // On vérifie si l'activité a une url
-    final bool hasVideo = widget.activity.activityUrl != null &&
-        widget.activity.activityUrl!.isNotEmpty;
+    // On vérifie si on doit afficher une image ou une vidéo
+    final bool hasVideo = _youtubeController != null;
 
     return Scaffold(
-      // J'ai dû enlever le 'const' car le titre est dynamique
       appBar: CustomFullAppBar(
         title: widget.activity.title,
       ),
@@ -34,37 +77,72 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image ou vidéo
+              // Zone de contenu (Image ou Vidéo)
               Padding(
                 padding: const EdgeInsets.all(25),
                 child: Container(
                   width: double.infinity,
-                  height: 200,
+                  height: 200, 
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.grey[300], // Fond si pas de contenu à afficher
-                    image: widget.activity.imageUrl != null
-                        ? DecorationImage(
-                            image: NetworkImage(widget.activity.imageUrl!),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
+                    // Ombre douce pour faire ressortir le lecteur
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
                   ),
-                  child: hasVideo
-                      ? const Center(
-                          // Espace réservé pour le lecteur vidéo
-                          child: Text('Lecteur vidéo à venir'),
-                        )
-                      : null,
+                  // On utilise ClipRRect pour forcer la vidéo à avoir les bords arrondis
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: hasVideo
+                        ? YoutubePlayer(
+                            controller: _youtubeController!,
+                            showVideoProgressIndicator: true,
+                            progressIndicatorColor: Colors.amber,
+                            onReady: () {
+                              _isPlayerReady = true;
+                            },
+                            // Personnalisation des couleurs des contrôles pour ton thème zen
+                            progressColors: const ProgressBarColors(
+                              playedColor: Colors.amber,
+                              handleColor: Colors.amberAccent,
+                            ),
+                          )
+                        : (widget.activity.imageUrl != null
+                            ? Image.network(
+                                widget.activity.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // Image de secours si le lien est mort
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.image_not_supported, size: 50),
+                                  );
+                                },
+                              )
+                            : Container(
+                                color: Colors.grey[300],
+                                child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                              )),
+                  ),
                 ),
               ),
+
+              // Titre Description
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   'Description',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+
+              // Conteneur de la description
               Padding(
                 padding: const EdgeInsets.all(25),
                 child: Container(
@@ -75,25 +153,19 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
                       BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.12),
-                        blurRadius: 3,
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        blurRadius: 10,
                         spreadRadius: 0,
-                        offset: Offset(0, 1),
+                        offset: Offset(0, 3),
                       ),
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.24),
-                        blurRadius: 2,
-                        spreadRadius: 0,
-                        offset: Offset(0, 1),
-                      )
                     ],
                   ),
                   child: Text(
                     widget.activity.content,
                     style: const TextStyle(
                       fontSize: 14,
-                      height: 1.5,
-                      color: Colors.black,
+                      height: 1.6,
+                      color: Colors.black87,
                     ),
                   ),
                 ),

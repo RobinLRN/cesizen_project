@@ -24,6 +24,13 @@ INSERT INTO activity (id_activity, title, content, activity_type, activity_date,
 (2, 'Exercice de respiration', 'Un exercice de respiration pour réduire le stress', 'Respiration', '2024-07-02', 'https://example.com/breathing', 1),
 (3, 'Yoga pour débutants', 'Une séance de yoga pour les débutants', 'Yoga', '2024-07-03', 'https://example.com/yoga', 2);
 
+-- Nouvelles activités
+INSERT INTO activity (id_activity,title, content, activity_date, activity_url, id_utilisateur, image_url, short_description)
+VALUES (4,'Détente en 5 minutes', 'Voici le texte complet de la description de mon exercice de yoga...', '2024-07-05', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 1, 'https://mon-image-de-yoga.jpg', 'Exercices de yoga');
+
+--Lier nouvelle activité à sa catégorie
+INSERT INTO activity_category (id_activity, id_category) VALUES (4, 1);
+
 -- Insertion des Questions
 INSERT INTO question (id_question, contenu, val_score) VALUES
 (1, 'Décès du conjoint', 100),
