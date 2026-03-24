@@ -1,3 +1,5 @@
+const pool = require('../config/db');
+
 //fonction pour changer le statut d'un favori
 exports.toggleFavorite = async (req, res) => {
     //on récupère l'id et le corps de la requête
