@@ -1,4 +1,5 @@
 import 'package:cesizen/views/activity_screen.dart';
+import 'package:cesizen/views/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'ui/theme.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-     home: ActivityScreen(),
+     home: LoginScreen(),
     );
   }
 }

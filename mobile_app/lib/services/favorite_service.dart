@@ -23,7 +23,7 @@ class FavoriteService {
 //Ajouter/retirer favoris
   Future<bool> toggleFavorite(int userId, int activityId) async {
     try{
-      final url = Uri.parse('/toggle');
+      final url = Uri.parse('$baseUrl/toggle');
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},

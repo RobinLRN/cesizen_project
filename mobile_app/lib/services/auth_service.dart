@@ -23,6 +23,8 @@ class AuthService {
         final data = jsonDecode(response.body);
         // On sauvegarde le token dans le stockage sécurisé
         await storage.write(key: 'jwt_token', value: data['token']);
+        //On sauvegarde l'ID utilisateur
+        await storage.write(key: 'userId', value: data['user']['id'].toString());
         return true;
       }
     } catch (e) {
