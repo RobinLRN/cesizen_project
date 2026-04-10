@@ -33,7 +33,7 @@ exports.saveDiagnostic = async (req, res) => {
             diagnostic: result.rows[0]
         });
     } catch (error) {
-        console.error('Erreur lors de l'\'enregistrement du diagnostic:', error);
+        console.error('Erreur lors de la sauvegarde du diagnostic:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 };
