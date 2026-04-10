@@ -44,6 +44,43 @@ INSERT INTO question (id_question, contenu, val_score) VALUES
 (9, 'Retraite', 45),
 (10, 'Changement de santé d’un membre de la famille proche', 44);
 
+--nouvelles questions pour questionnaire complet
+-- Insertion des premières questions (événements de vie)
+INSERT INTO question (id_question, contenu, val_score) VALUES 
+(11, 'Réconciliation conjugale', 45),
+(12, 'Grossesse', 40),
+(13, 'Difficultés sexuelles', 39),
+(14, 'Arrivée d''un nouveau membre dans la famille', 39),
+(15, 'Réajustement professionnel', 39),
+(16, 'Changement de situation financière', 38),
+(17, 'Décès d''un ami proche', 37),
+(18, 'Changement de type de travail', 36),
+(19, 'Changement du nombre de disputes avec le conjoint', 35),
+(20, 'Hypothèque ou prêt important', 31),
+(21,'Saisie d''une hypothèque ou d''un prêt', 30),
+(22,'Changement de responsabilités au travail', 29),
+(23,'Fils ou fille quittant le domicile', 29),
+(24,'Problèmes avec la belle-famille', 29),
+(25,'Réussite personnelle remarquable', 28),
+(26,'Le conjoint commence ou arrête de travailler', 26),
+(27,'Début ou fin d''études', 26),
+(28,'Changement de conditions de vie', 25),
+(29,'Révision des habitudes personnelles', 24),
+(30,'Problèmes avec le patron', 23),
+(31,'Changement d''heures ou de conditions de travail', 20),
+(32,'Changement de domicile', 20),
+(33,'Changement d''école', 20),
+(34,'Changement de loisirs', 19),
+(35,'Changement d''activités religieuses', 19),
+(36,'Changement d''activités sociales', 18),
+(37,'Hypothèque ou prêt mineur', 17),
+(38,'Changement d''habitudes de sommeil', 16),
+(39,'Changement de fréquence des réunions de famille', 15),
+(40,'Changement d''habitudes alimentaires', 15),
+(41,'Vacances', 13),
+(42,'Noël', 12),
+(43,'Violation mineure de la loi', 11);
+
 
 -- Modifications de la base pour y insérer les catégories d'Activités et les relier : 
 
