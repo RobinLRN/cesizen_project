@@ -4,6 +4,7 @@ import '../theme.dart';
 import '../../views/login_screen.dart'; // Importe ta page de connexion
 import '../../views/placeholder_screen.dart';
 import '../../views/activity_screen.dart';
+import '../../views/diagnostic_start_screen.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   const CustomNavigationBar({super.key});
@@ -56,7 +57,7 @@ class CustomNavigationBar extends StatelessWidget {
           ),
 
           _navItem(Icons.pie_chart_rounded, "Diagnostic", () {
-             Navigator.push(context, MaterialPageRoute(builder: (context) => const DiagnosticScreen()));
+             Navigator.push(context, MaterialPageRoute(builder: (context) => const DiagnosticStartScreen()));
           }),
           _navItem(Icons.person_rounded, "Profil", () => _handleProfileNavigation(context)),
         ],
