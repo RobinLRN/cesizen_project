@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'views/home_screen.dart';
 import 'views/login_screen.dart';
 import 'ui/widgets/widgets.dart';
+import 'views/activity_screen.dart';
 
 void main() {
   // Indispensable pour que Flutter puisse interagir avec le stockage avant runApp
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'CesiZen',
       debugShowCheckedModeBanner: false,
       // Le FutureBuilder décide du premier écran à afficher
+      theme: AppTheme.lightTheme,
       home: FutureBuilder<bool>(
         future: _checkLoginStatus(),
         builder: (context, snapshot) {
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
+        '/activities': (context) => const ActivityScreen(),
       },
     );
   }

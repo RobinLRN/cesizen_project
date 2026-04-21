@@ -11,14 +11,13 @@ exports.getAllQuestions = async (req, res) => {
     }
 };
 
-// Enregistrer le résultat d'un diagnostic
 exports.saveDiagnostic = async (req, res) => {
     const { id_utilisateur, score } = req.body;
     
-    // Détermination du niveau de stress en fonction du score
-    let nv_stress = 'Bas';
-    if (score >= 150 && score <= 300) nv_stress = 'Moyen';
-    if (score > 300) nv_stress = 'Élevé';
+    // On envoie des ENTIERS (1, 2, 3) pour correspondre au type 'integer' de ta base
+    let nv_stress = 1; // Correspond à Bas
+    if (score >= 100 && score <= 300) nv_stress = 2; // Correspond à Moyen
+    if (score > 300) nv_stress = 3; // Correspond à Élevé
 
     try {
         const query = `
@@ -26,6 +25,7 @@ exports.saveDiagnostic = async (req, res) => {
             VALUES (NOW(), $1, $2, $3) 
             RETURNING *`;
         
+        // On passe les valeurs numériques
         const result = await pool.query(query, [score, nv_stress, id_utilisateur]);
         
         res.status(201).json({
@@ -33,6 +33,7 @@ exports.saveDiagnostic = async (req, res) => {
             diagnostic: result.rows[0]
         });
     } catch (error) {
+        // Regarde bien ce log dans ton terminal VS Code !
         console.error('Erreur lors de la sauvegarde du diagnostic:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }

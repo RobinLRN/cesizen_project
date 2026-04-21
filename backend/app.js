@@ -19,7 +19,7 @@ app.use('/api/categories', categoryRoute);
 
 app.use('/api/favorite', favoriteRoute);
 
-app.use('./api/diagnostic', diagnosticRoute);
+app.use('/api/diagnostic', diagnosticRoute);
 
 pool.connect((err, client, release) => {
     if (err) {

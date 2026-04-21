@@ -3,23 +3,26 @@
 import 'package:flutter/material.dart';
 
 class PageLayout extends StatelessWidget {
-  final Widget child; 
+  final Widget child;
   final bool showAppBar;
+  final Color? backgroundColor; // 1. On ajoute cette variable optionnelle
 
   const PageLayout({
-    super.key, 
-    required this.child, 
+    super.key,
+    required this.child,
     this.showAppBar = true,
+    this.backgroundColor, // 2. On l'ajoute au constructeur
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // 3. Si une couleur est donnée, on l'utilise, sinon il prendra le blanc du thème
+      backgroundColor: backgroundColor, 
       body: Padding(
-          // On définit ici la marge globale pour TOUTES les pages
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-          child: child, 
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+        child: child,
+      ),
     );
   }
 }
