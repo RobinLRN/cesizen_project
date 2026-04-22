@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/diagnostic_service.dart';
 import '../ui/theme.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DiagnosticResultScreen extends StatefulWidget {
   final int score;
@@ -16,11 +17,27 @@ class _DiagnosticResultScreenState extends State<DiagnosticResultScreen> {
   @override
   void initState() {
     super.initState();
-    _diagnosticService.saveResult(widget.score);
+    _saveScore(); 
   }
 
+  // Vérifier la connexion avant de sauvegarder
+  void _saveScore() async {
+    const storage = FlutterSecureStorage();
+    String? userId = await storage.read(key: 'userId');
+
+    if (userId != null) {
+      // L'utilisateur est connecté, on enregistre vraiment
+      await _diagnosticService.saveResult(widget.score);
+      print("Score enregistré pour l'utilisateur $userId");
+    } else {
+      // Mode invité : on se contente d'afficher le score à l'écran
+      print("Mode invité : Affichage du score sans enregistrement en base.");
+    }
+  }
+
+  
+
   Map<String, dynamic> _getResultData() {
-    // 4. Ajustement des couleurs et 5. Paragraphes fidèles à la maquette
     if (widget.score < 100) {
       return {
         'title': 'Moins de 100 points : stress modéré, risque de 30 %',

@@ -4,6 +4,7 @@ import 'views/home_screen.dart';
 import 'views/login_screen.dart';
 import 'ui/widgets/widgets.dart';
 import 'views/activity_screen.dart';
+import 'views/diagnostic_start_screen.dart';
 
 void main() {
   // Indispensable pour que Flutter puisse interagir avec le stockage avant runApp
@@ -22,38 +23,20 @@ class MyApp extends StatelessWidget {
     return token != null;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CesiZen',
-      debugShowCheckedModeBanner: false,
-      // Le FutureBuilder décide du premier écran à afficher
-      theme: AppTheme.lightTheme,
-      home: FutureBuilder<bool>(
-        future: _checkLoginStatus(),
-        builder: (context, snapshot) {
-          // Pendant que l'app vérifie le stockage sécurisé
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          
-          // Si on a un token (utilisateur connecté) -> Accueil
-          // Sinon -> Page de connexion
-          if (snapshot.data == true) {
-            return const HomeScreen();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+ // Dans ton fichier main.dart
+@override
+Widget build(BuildContext context) {
+  return MaterialApp(
+    title: 'CesiZen',
+    theme: AppTheme.lightTheme,
+    debugShowCheckedModeBanner: false,
+    home: const HomeScreen(), 
+    routes: {
+      '/home': (context) => const HomeScreen(),
+      '/login': (context) => const LoginScreen(),
+      '/activities': (context) => const ActivityScreen(),
+      '/diagnostic': (context) => const DiagnosticStartScreen(),
       
-      // définir les routes
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/activities': (context) => const ActivityScreen(),
       },
     );
   }

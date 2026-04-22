@@ -24,6 +24,19 @@ class CustomNavigationBar extends StatelessWidget {
     }
   }
 
+  Future<void> handleProfileClick(BuildContext context) async {
+  final storage = const FlutterSecureStorage();
+  String? token = await storage.read(key: 'jwt_token');
+
+  if (token != null) {
+    // Si on a un token, on va vers le profil
+    Navigator.pushNamed(context, '/profile');
+  } else {
+    // Sinon, on invite à se connecter
+    Navigator.pushNamed(context, '/login');
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Container(
