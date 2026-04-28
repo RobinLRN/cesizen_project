@@ -75,3 +75,25 @@ exports.toggleActivityStatus = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// Supprimer
+exports.deleteActivity = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Si vous utilisez directement pool.query dans votre contrôleur :
+    const result = await pool.query(
+      'DELETE FROM activity WHERE id_activity = $1 RETURNING *',
+      [id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Activité non trouvée" });
+    }
+
+    res.status(200).json({ message: "Activité supprimée avec succès" });
+  } catch (err) {
+    console.error("Erreur lors de la suppression:", err);
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -60,4 +60,15 @@ class AdminActivityService {
       throw Exception('Erreur lors du chargement des catégories');
     }
   }
+
+  Future<void> deleteActivity(int id) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/$id'),
+      headers: {"Content-Type": "application/json"},
+    );
+    // 200 (OK) ou 204 (No Content) sont les codes habituels pour une suppression réussie
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception('Erreur lors de la suppression');
+    }
+  }
 }

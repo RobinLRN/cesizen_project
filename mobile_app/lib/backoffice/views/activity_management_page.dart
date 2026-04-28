@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/admin_activity_service.dart';
 import '../models/admin_activity_model.dart';
+import '../models/admin_category_model.dart';
+// N'oubliez pas de vérifier le chemin vers votre fichier de thème
 import '../../ui/theme.dart'; 
 
 class ActivityManagementPage extends StatefulWidget {
@@ -12,12 +14,33 @@ class ActivityManagementPage extends StatefulWidget {
 
 class _ActivityManagementPageState extends State<ActivityManagementPage> {
   final AdminActivityService _activityService = AdminActivityService();
+  
   late Future<List<AdminActivity>> _activitiesFuture;
+  List<AdminCategory> _categories = [];
 
   @override
   void initState() {
     super.initState();
-    _activitiesFuture = _activityService.fetchActivities();
+    _loadInitialData();
+  }
+
+  // Charge les catégories d'abord, puis rafraîchit la liste des activités
+  Future<void> _loadInitialData() async {
+    try {
+      final cats = await _activityService.fetchCategories();
+      if (mounted) {
+        setState(() {
+          _categories = cats;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur catégories : $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+    _refresh();
   }
 
   void _refresh() => setState(() { _activitiesFuture = _activityService.fetchActivities(); });
@@ -32,13 +55,17 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
     final urlCtrl = TextEditingController(text: isEditing ? activity.activityUrl : "");
     final imgCtrl = TextEditingController(text: isEditing ? activity.imageUrl : "");
     
-    int selectedCat = isEditing ? activity.idCategory : 1;
-    int currentUserId = isEditing ? activity.idUtilisateur : 1; // Simulation de l'utilisateur connecté
+    // Détermine la catégorie sélectionnée par défaut
+    int? selectedCat = isEditing 
+        ? activity.idCategory 
+        : (_categories.isNotEmpty ? _categories.first.id : null);
+        
+    int currentUserId = isEditing ? activity.idUtilisateur : 1; // ID admin par défaut
 
     showDialog(
       context: context,
-      barrierDismissible: false, // Force l'utilisateur à utiliser les boutons pour fermer
-      builder: (context) => AlertDialog(
+      barrierDismissible: false, // Force l'utilisateur à cliquer sur Annuler ou Valider
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: Colors.white,
         title: Text(
           isEditing ? "Modifier l'activité" : "Nouvelle activité",
@@ -55,12 +82,12 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
                   TextFormField(
                     controller: titleCtrl, 
                     decoration: const InputDecoration(labelText: "Titre *"),
-                    validator: (value) => value == null || value.isEmpty ? 'Ce champ est requis' : null,
+                    validator: (value) => value == null || value.trim().isEmpty ? 'Ce champ est requis' : null,
                   ),
                   TextFormField(
                     controller: descCtrl, 
                     decoration: const InputDecoration(labelText: "Description courte *"),
-                    validator: (value) => value == null || value.isEmpty ? 'Ce champ est requis' : null,
+                    validator: (value) => value == null || value.trim().isEmpty ? 'Ce champ est requis' : null,
                   ),
                   TextFormField(
                     controller: contentCtrl, 
@@ -76,15 +103,19 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
                     decoration: const InputDecoration(labelText: "URL de l'image (Optionnel)"),
                   ),
                   const SizedBox(height: 16),
+                  
+                  // Menu déroulant dynamique
                   DropdownButtonFormField<int>(
                     value: selectedCat,
                     decoration: const InputDecoration(labelText: "Catégorie *"),
-                    items: const [
-                      DropdownMenuItem(value: 1, child: Text("Stress")),
-                      DropdownMenuItem(value: 2, child: Text("Sport")),
-                      DropdownMenuItem(value: 3, child: Text("Méditation")),
-                    ],
-                    onChanged: (v) => selectedCat = v!,
+                    validator: (value) => value == null ? 'Veuillez sélectionner une catégorie' : null,
+                    items: _categories.map((cat) {
+                      return DropdownMenuItem<int>(
+                        value: cat.id,
+                        child: Text(cat.title),
+                      );
+                    }).toList(),
+                    onChanged: (v) => selectedCat = v,
                   ),
                 ],
               ),
@@ -92,14 +123,62 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
           ),
         ),
         actions: [
+          // BOUTON SUPPRIMER (Uniquement en mode édition)
+          if (isEditing)
+            TextButton(
+              onPressed: () {
+                // Popup de confirmation avant de supprimer
+                showDialog(
+                  context: dialogContext,
+                  builder: (confirmContext) => AlertDialog(
+                    title: const Text("Supprimer l'activité ?"),
+                    content: const Text("Cette action est irréversible. Voulez-vous continuer ?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(confirmContext),
+                        child: const Text("Annuler"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                        onPressed: () async {
+                          try {
+                            await _activityService.deleteActivity(activity.id!);
+                            if (mounted) {
+                              Navigator.pop(confirmContext); // Ferme la confirmation
+                              Navigator.pop(dialogContext); // Ferme le formulaire principal
+                              _refresh(); // Met à jour la liste
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Activité supprimée avec succès'), backgroundColor: Colors.green),
+                              );
+                            }
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
+                              );
+                            }
+                          }
+                        },
+                        child: const Text("Supprimer", style: TextStyle(color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: const Text("Supprimer", style: TextStyle(color: Colors.red)),
+            ),
+
+          // BOUTON ANNULER
           TextButton(
-            onPressed: () => Navigator.pop(context), 
+            onPressed: () => Navigator.pop(dialogContext), 
             child: Text("Annuler", style: TextStyle(color: Colors.grey[600])),
           ),
+
+          // BOUTON VALIDER
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: AppColors.darkCyan),
             onPressed: () async {
-              if (formKey.currentState!.validate()) { // Validation "Blindée"
+              if (formKey.currentState!.validate() && selectedCat != null) {
                 final data = AdminActivity(
                   id: isEditing ? activity.id : null,
                   title: titleCtrl.text,
@@ -107,8 +186,9 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
                   activityUrl: urlCtrl.text,
                   imageUrl: imgCtrl.text,
                   shortDescription: descCtrl.text,
-                  idCategory: selectedCat,
-                  idUtilisateur: currentUserId, // On inclut l'ID utilisateur
+                  idCategory: selectedCat!,
+                  idUtilisateur: currentUserId,
+                  estActive: isEditing ? activity.estActive : true,
                 );
 
                 try {
@@ -117,14 +197,19 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
                   } else {
                     await _activityService.createActivity(data);
                   }
-                  if (context.mounted) {
-                    Navigator.pop(context);
+                  if (mounted) {
+                    Navigator.pop(dialogContext);
                     _refresh();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Activité enregistrée avec succès'), backgroundColor: Colors.green),
+                    );
                   }
                 } catch (e) {
-                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Erreur serveur : $e', style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red),
-                  );
+                   if (mounted) {
+                     ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Erreur : $e', style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+                    );
+                   }
                 }
               }
             },
@@ -180,8 +265,16 @@ class _ActivityManagementPageState extends State<ActivityManagementPage> {
                     value: acts[i].estActive,
                     activeColor: AppColors.darkCyan,
                     onChanged: (v) async {
-                      await _activityService.toggleStatus(acts[i].id!, v);
-                      _refresh();
+                      try {
+                        await _activityService.toggleStatus(acts[i].id!, v);
+                        _refresh();
+                      } catch (e) {
+                         if (mounted) {
+                           ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Erreur: $e'), backgroundColor: Colors.red),
+                          );
+                         }
+                      }
                     },
                   ),
                   IconButton(

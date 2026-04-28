@@ -180,6 +180,25 @@ const swaggerOptions = {
           responses: { 200: { description: 'Statut mis à jour' } }
         }
       },
+      '/api/activities/{id}': {
+        delete: {
+          summary: 'Supprimer une activité',
+          tags: ['Admin - Activités'],
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              schema: { type: 'integer' }
+            }
+          ],
+          responses: {
+            200: { description: 'Activité supprimée avec succès' },
+            404: { description: 'Activité non trouvée' },
+            500: { description: 'Erreur serveur' }
+          }
+        }
+      },
       '/api/users': {
         get: {
           summary: 'Lister tous les utilisateurs',
