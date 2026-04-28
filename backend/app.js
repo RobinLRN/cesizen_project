@@ -33,6 +33,27 @@ const swaggerOptions = {
       },
     ],
     paths: {
+      '/api/diagnostic/config/{id}': {
+      put: {
+        summary: 'Modifier les paragraphes du résultat diagnostic',
+        tags: ['Admin - Diagnostic'],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  titre: { type: 'string' },
+                  description: { type: 'string' }
+                }
+              }
+            }
+          }
+        },
+        responses: { 200: { description: 'Mis à jour' } }
+      }
+    },
       '/api/diagnostic/questions': {
         get: {
           summary: 'Récupère toutes les questions du diagnostic',
@@ -157,7 +178,25 @@ const swaggerOptions = {
           },
           responses: { 200: { description: 'Statut mis à jour' } }
         }
-      }     
+      },
+      '/api/users': {
+        get: {
+          summary: 'Lister tous les utilisateurs',
+          tags: ['Admin - Utilisateurs'],
+          responses: { 200: { description: 'Liste récupérée' } }
+        }
+      },
+      '/api/users/{id}/status': {
+        patch: {
+          summary: 'Désactiver ou Activer un compte',
+          tags: ['Admin - Utilisateurs'],
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          requestBody: {
+            content: { 'application/json': { schema: { type: 'object', properties: { est_actif: { type: 'boolean' } } } } }
+          },
+          responses: { 200: { description: 'Statut mis à jour' } }
+        }
+      } 
     }
   },
   apis: [],

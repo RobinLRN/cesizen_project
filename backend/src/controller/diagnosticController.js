@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-// Récupérer toutes les questions pour le test
+// Récupérer toutes les questions du diagnostic
 exports.getAllQuestions = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM question ORDER BY id_question ASC');
@@ -14,18 +14,16 @@ exports.getAllQuestions = async (req, res) => {
 exports.saveDiagnostic = async (req, res) => {
     const { id_utilisateur, score } = req.body;
     
-    // On envoie des ENTIERS (1, 2, 3) pour correspondre au type 'integer' de ta base
-    let nv_stress = 1; // Correspond à Bas
-    if (score >= 100 && score <= 300) nv_stress = 2; // Correspond à Moyen
-    if (score > 300) nv_stress = 3; // Correspond à Élevé
+    let nv_stress = 1; 
+    if (score >= 100 && score <= 300) nv_stress = 2; 
+    if (score > 300) nv_stress = 3; 
 
     try {
         const query = `
             INSERT INTO diagnostic (date_diag, score, nv_stress, id_utilisateur) 
             VALUES (NOW(), $1, $2, $3) 
             RETURNING *`;
-        
-        // On passe les valeurs numériques
+
         const result = await pool.query(query, [score, nv_stress, id_utilisateur]);
         
         res.status(201).json({
@@ -33,8 +31,22 @@ exports.saveDiagnostic = async (req, res) => {
             diagnostic: result.rows[0]
         });
     } catch (error) {
-        // Regarde bien ce log dans ton terminal VS Code !
         console.error('Erreur lors de la sauvegarde du diagnostic:', error);
         res.status(500).json({ error: 'Erreur serveur' });
+    }
+};
+
+// Mettre à jour les titres et descriptions des paragraphes du diagnostic
+exports.updateConfig = async (req, res) => {
+    const { id } = req.params;
+    const { titre, description } = req.body;
+    try {
+        await pool.query(
+            'UPDATE diagnostic_config SET titre = $1, description = $2 WHERE id_config = $3',
+            [titre, description, id]
+        );
+        res.json({ message: "Paragraphes mis à jour" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 };
