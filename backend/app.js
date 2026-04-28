@@ -97,7 +97,66 @@ const swaggerOptions = {
             200: { description: 'Liste des activités récupérée' }
           }
         }
-      }
+      },
+      '/api/activities': {
+        get: {
+        summary: 'Récupère toutes les activités',
+        tags: ['Activités'],
+        responses: {
+          200: {
+            description: 'Liste des activités récupérée avec succès',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id_activite: { type: 'integer' },
+                      titre: { type: 'string' },
+                      description: { type: 'string' },
+                      id_categorie: { type: 'integer' },
+                      est_active: { type: 'boolean' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+        post: {
+          summary: 'Ajouter une nouvelle activité',
+          tags: ['Admin - Activités'],
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    titre: { type: 'string' },
+                    description: { type: 'string' },
+                    id_categorie: { type: 'integer' },
+                    lien_image: { type: 'string' }
+                  }
+                }
+              }
+            }
+          },
+          responses: { 201: { description: 'Créée' } }
+        }
+      },
+      '/api/activities/{id}/status': {
+        patch: {
+          summary: 'Désactiver ou Activer une activité',
+          tags: ['Admin - Activités'],
+          parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+          requestBody: {
+            content: { 'application/json': { schema: { type: 'object', properties: { est_active: { type: 'boolean' } } } } }
+          },
+          responses: { 200: { description: 'Statut mis à jour' } }
+        }
+      }     
     }
   },
   apis: [],
