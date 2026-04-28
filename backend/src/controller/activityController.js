@@ -3,17 +3,16 @@ const pool = require('../config/db');
 
 // Récupérer
 exports.getAllActivities = async (req, res) => {
-    try {
-        const result = await pool.query(`
-            SELECT a.*, c.nom_role as category_name 
-            FROM activity a
-            LEFT JOIN activity_category ac ON a.id_activity = ac.id_activity
-            LEFT JOIN category c ON ac.id_category = c.id_category
-        `);
-        res.json(result.rows);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    // On appelle la fonction findAll() de votre modèle qui contient 
+    // la bonne requête SQL avec le json_agg pour les catégories
+    const activities = await ActivityModel.findAll();
+    
+    // On renvoie le résultat formatté
+    res.json(activities);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 // Ajouter
