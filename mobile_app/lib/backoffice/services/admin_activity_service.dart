@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/admin_activity_model.dart';
-// import '../config.dart'; // N'hésitez pas à utiliser votre fichier de config pour l'URL
+import '../models/admin_category_model.dart';
+import '../../config.dart';
 
 class AdminActivityService {
   final String baseUrl = "http://localhost:3000/api/activities";
@@ -46,6 +47,17 @@ class AdminActivityService {
     );
     if (response.statusCode != 200) {
       throw Exception('Erreur lors du changement de statut');
+    }
+  }
+
+  Future<List<AdminCategory>> fetchCategories() async {
+    final response = await http.get(Uri.parse("http://localhost:3000/api/categories")); 
+    
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse.map((data) => AdminCategory.fromJson(data)).toList();
+    } else {
+      throw Exception('Erreur lors du chargement des catégories');
     }
   }
 }
