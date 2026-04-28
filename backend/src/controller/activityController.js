@@ -1,18 +1,18 @@
 const ActivityModel = require('../model/activityModel');
+const pool = require('../config/db'); 
 
-const activityController = {
-    getAllActivities: async (req, res) => {
-        try {
-            const activities = await ActivityModel.findAll();
-            res.status(200).json(activities);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Erreur serveur' });
-        }
+// Récupérer
+exports.getAllActivities = async (req, res) => {
+    try {
+        const activities = await ActivityModel.findAll();
+        res.status(200).json(activities);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erreur serveur' });
     }
 };
 
-// Ajouter une activité
+// Ajouter
 exports.createActivity = async (req, res) => {
     const { titre, description, id_categorie, lien_image } = req.body;
     try {
@@ -26,7 +26,7 @@ exports.createActivity = async (req, res) => {
     }
 };
 
-// Modifier une activité
+// Modifier
 exports.updateActivity = async (req, res) => {
     const { id } = req.params;
     const { titre, description, id_categorie, lien_image } = req.body;
@@ -41,10 +41,10 @@ exports.updateActivity = async (req, res) => {
     }
 };
 
-// Désactiver/Activer une activité (Soft Delete)
+// Désactiver/Activer
 exports.toggleActivityStatus = async (req, res) => {
     const { id } = req.params;
-    const { est_active } = req.body; // true ou false
+    const { est_active } = req.body;
     try {
         await pool.query('UPDATE activite SET est_active = $1 WHERE id_activite = $2', [est_active, id]);
         res.json({ message: `Statut de l'activité mis à jour : ${est_active}` });
@@ -52,5 +52,3 @@ exports.toggleActivityStatus = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
-module.exports = activityController;
