@@ -196,7 +196,32 @@ const swaggerOptions = {
           },
           responses: { 200: { description: 'Statut mis à jour' } }
         }
-      } 
+      },
+      '/api/users/{id}/role': {
+        put: {
+          summary: 'Changer le rôle d\'un utilisateur (Admin/User)',
+          tags: ['Admin - Utilisateurs'],
+          parameters: [
+            { name: 'id', in: 'path', required: true, schema: { type: 'integer' } }
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    id_role: { type: 'integer', example: 1 }
+                  }
+                }
+              }
+            }
+          },
+          responses: {
+            200: { description: 'Rôle mis à jour' }
+          }
+        }
+      },
     }
   },
   apis: [],
