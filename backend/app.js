@@ -13,6 +13,7 @@ const activityRoute = require('./src/routes/activityRoute');
 const categoryRoute = require('./src/routes/categoryRoute');
 const favoriteRoute = require('./src/routes/favoriteRoute');
 const diagnosticRoute = require('./src/routes/diagnosticRoute');
+const userRoute = require('./src/routes/userRoute');
 
 // middleware
 app.use(express.json());
@@ -172,6 +173,7 @@ app.use('/api/activities', activityRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/favorite', favoriteRoute);
 app.use('/api/diagnostic', diagnosticRoute);
+app.use('/api/users', userRoute);
 
 // Connexion à la DB
 pool.connect((err, client, release) => {
