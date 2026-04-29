@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-//import 'views/user_management_page.dart'; 
+import 'views/user_management_page.dart'; 
 import 'views/activity_management_page.dart';
 
 class BackOfficeLayout extends StatefulWidget {
@@ -13,8 +13,7 @@ class _BackOfficeLayoutState extends State<BackOfficeLayout> {
 
   // Liste des pages du backoffice
   final List<Widget> _pages = [
-    //const UserManagementPage(),
-    Center(child: Text("Gestion des Users")),
+    const UserManagementPage(),
     const ActivityManagementPage(),
     Center(child: Text("Configuration Diagnostic")),
   ];
