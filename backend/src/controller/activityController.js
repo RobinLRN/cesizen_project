@@ -4,11 +4,12 @@ const pool = require('../config/db');
 // Récupérer
 exports.getAllActivities = async (req, res) => {
   try {
-    // On appelle la fonction findAll() de votre modèle qui contient 
-    // la bonne requête SQL avec le json_agg pour les catégories
-    const activities = await ActivityModel.findAll();
+    // On regarde si l'URL contient "?active=true"
+    const onlyActive = req.query.active === 'true'; 
     
-    // On renvoie le résultat formatté
+    // On passe cette variable au modèle
+    const activities = await ActivityModel.findAll(onlyActive);
+    
     res.json(activities);
   } catch (err) {
     res.status(500).json({ error: err.message });
