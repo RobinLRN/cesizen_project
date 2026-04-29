@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../ui/widgets/page_layout.dart';
-import '../ui/widgets/widgets.dart'; // Supposant que CustomFullAppBar et CustomNavigationBar y sont
+import '../ui/widgets/widgets.dart';
 import '../services/auth_service.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -12,6 +12,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true; // On affiche un chargement le temps de vérifier
+  String _pseudo = "Utilisateur"; // Valeur par défaut, sera remplacée par le pseudo réel
 
   @override
   void initState() {
@@ -19,19 +20,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _checkAuthentication();
   }
 
-  // --- LE FAMEUX VIGILE ---
+  // Fonction pour vérifier si l'utilisateur est connecté et récupérer son pseudo
   Future<void> _checkAuthentication() async {
     final token = await AuthService().getToken();
     
     if (!mounted) return;
 
     if (token == null) {
-      // Pas de token = Pas connecté -> Redirection immédiate vers le Login
-      // Remplacer '/login' par le nom exact de votre route de connexion
       Navigator.pushReplacementNamed(context, '/login'); 
     } else {
-      // Token présent -> On enlève l'écran de chargement et on affiche le profil
+      // RÉCUPÉRATION DU PSEUDO ICI :
+      final savedPseudo = await AuthService().getPseudo();
+      
       setState(() {
+        if (savedPseudo != null) {
+          _pseudo = savedPseudo;
+        }
         _isLoading = false;
       });
     }
@@ -39,7 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Tant qu'on vérifie, on affiche un petit cercle de chargement
     if (_isLoading) {
       return const Scaffold(
         body: Center(
@@ -67,7 +70,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           children: [
             const SizedBox(height: 40),
-            // Avatar (placeholder pour le moment)
             Center(
               child: Stack(
                 alignment: Alignment.bottomRight,
@@ -91,14 +93,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            // Nom de l'utilisateur (placeholder)
-            const Center(
+            Center(
               child: Text(
-                "Nom d'utilisateur",
-                style: TextStyle(
+                _pseudo, 
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.softPeach, // À ajuster selon votre thème exact
+                  color: AppColors.softPeach, 
                 ),
               ),
             ),
@@ -106,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       extendBody: true,
-      bottomNavigationBar: const CustomNavigationBar(), // Votre barre de navigation en bas
+      bottomNavigationBar: const CustomNavigationBar(), 
     );
   }
 }
