@@ -52,17 +52,34 @@ exports.createActivity = async (req, res) => {
 
 // Modifier
 exports.updateActivity = async (req, res) => {
-    const { id } = req.params;
-    const { titre, description, id_categorie, lien_image } = req.body;
-    try {
-        const result = await pool.query(
-            'UPDATE activity SET title = $1, short_description = $2, id_categorie = $3, image_url = $4 WHERE id_activite = $5 RETURNING *',
-            [titre, description, id_categorie, lien_image, id]
-        );
-        res.json(result.rows[0]);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  const { id } = req.params;
+  const { title, content, activity_url, image_url, short_description, id_category } = req.body;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+
+    // Mise à jour de l'activité
+    await client.query(
+      `UPDATE activity 
+       SET title = $1, content = $2, activity_url = $3, image_url = $4, short_description = $5 
+       WHERE id_activity = $6`,
+      [title, content, activity_url, image_url, short_description, id]
+    );
+
+    // Mise à jour de la catégorie (On supprime l'ancienne liaison, on met la nouvelle)
+    await client.query('DELETE FROM activity_category WHERE id_activity = $1', [id]);
+    await client.query('INSERT INTO activity_category (id_activity, id_category) VALUES ($1, $2)', [id, id_category]);
+
+    await client.query('COMMIT');
+    res.status(200).json({ message: "Activité modifiée avec succès" });
+
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error("Erreur lors de la modification:", err);
+    res.status(500).json({ error: err.message });
+  } finally {
+    client.release();
+  }
 };
 
 // Désactiver/Activer
