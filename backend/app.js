@@ -55,6 +55,85 @@ const swaggerOptions = {
         responses: { 200: { description: 'Mis à jour' } }
       }
     },
+    '/api/auth/register': {
+  post: {
+    summary: 'Inscription d\'un nouvel utilisateur',
+    tags: ['Auth'],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['pseudo', 'email', 'password'],
+            properties: {
+              pseudo: { type: 'string', example: 'JohnDoe' },
+              email: { type: 'string', example: 'john@example.com' },
+              password: { type: 'string', example: 'password123' }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'Utilisateur créé avec succès',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                message: { type: 'string' },
+                user: { type: 'object' }
+              }
+            }
+          }
+        }
+      },
+      400: { description: 'Champs manquants ou compte déjà existant' },
+      500: { description: 'Erreur serveur' }
+    }
+  }
+},
+'/api/auth/admin/login': {
+  post: {
+    summary: 'Connexion administrateur',
+    tags: ['Auth'],
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            required: ['email', 'password'],
+            properties: {
+              email: { type: 'string', example: 'admin@example.com' },
+              password: { type: 'string', example: 'adminpass' }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: 'Connexion admin réussie',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                token: { type: 'string' }
+              }
+            }
+          }
+        }
+      },
+      401: { description: 'Identifiants invalides' },
+      403: { description: 'Accès refusé (non admin ou compte inexistant)' },
+      500: { description: 'Erreur serveur' }
+    }
+  }
+},
       '/api/diagnostic/questions': {
         get: {
           summary: 'Récupère toutes les questions du diagnostic',
