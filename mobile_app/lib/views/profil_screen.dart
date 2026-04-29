@@ -29,7 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (token == null) {
       Navigator.pushReplacementNamed(context, '/login'); 
     } else {
-      // RÉCUPÉRATION DU PSEUDO ICI :
+      // récupération du pseudo
       final savedPseudo = await AuthService().getPseudo();
       
       setState(() {

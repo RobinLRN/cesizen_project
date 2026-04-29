@@ -6,12 +6,14 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 router.post('/login', authController.login);
 router.post('/register', authController.register);
-
+router.post('/admin/login', authController.adminLogin);
 router.get('/profil', authMiddleware, (req, res) => {
     res.json({
         message:'bienvenue sur ton profil',
         user:req.user
     });
 });
+
+
 
 module.exports = router;
