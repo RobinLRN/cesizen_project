@@ -25,6 +25,8 @@ class AuthService {
         await storage.write(key: 'jwt_token', value: data['token']);
         //On sauvegarde l'ID utilisateur
         await storage.write(key: 'userId', value: data['user']['id'].toString());
+        //On sauvegarde le pseudo de l'utilisateur
+        await storage.write(key: 'pseudo', value: data['user']['pseudo']);
         return true;
       }
     } catch (e) {
@@ -32,6 +34,11 @@ class AuthService {
     }
     return false;
   }
+
+// fonction pour récupérer le pseudo de l'utilisateur
+  Future<String?> getPseudo() async {
+  return await storage.read(key: 'pseudo');
+}
 
   // Fonction pour récupérer le token JWT depuis le stockage sécurisé
   Future<String?> getToken() async {
@@ -42,6 +49,7 @@ class AuthService {
   Future<void> logout() async {
     await storage.delete(key: 'jwt_token');
     await storage.delete(key: 'userId');
+    await storage.delete(key: 'pseudo'); 
   }
 
   Future<String?> register(String pseudo, String email, String password) async {
