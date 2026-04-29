@@ -1,7 +1,7 @@
+const pool = require('../config/db');
+
 const ActivityModel = {
-  // On ajoute le paramètre "onlyActive" avec false par défaut
-  findAll: async (onlyActive = false) => { 
-    // 1. On coupe la requête SQL juste avant le GROUP BY
+  findAll: async (onlyActive = false) => {
     let query = `
       SELECT 
         a.*, 
@@ -20,19 +20,15 @@ const ActivityModel = {
       LEFT JOIN category c ON ac.id_category = c.id_category
     `;
 
-    // 2. Si on demande uniquement les actives, on ajoute le WHERE
     if (onlyActive) {
       query += ` WHERE a.est_active = true `;
     }
 
-    // 3. On remet la fin de la requête
     query += ` GROUP BY a.id_activity ORDER BY a.id_activity DESC;`;
 
     const result = await pool.query(query);
     return result.rows;
   },
-  
-  // ... vos autres fonctions (create, update, etc.)
 };
 
 module.exports = ActivityModel;
