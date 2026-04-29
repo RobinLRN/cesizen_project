@@ -4,7 +4,8 @@ import '../config.dart';
 import '../models/activity.dart';
 class ActivityService {
   Future<List<Activity>> getActivities() async {
-    final url = Uri.parse('${Config.apiBaseUrl}/activities');
+    final url = Uri.parse('${Config.apiBaseUrl}/activities?active=true'); // <-- On ajoute le paramètre pour ne récupérer 
+    //que les activités actives
 
     try {
       final response = await http.get(url);
