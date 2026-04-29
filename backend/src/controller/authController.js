@@ -5,50 +5,56 @@ require('dotenv').config();
 
 const authController = {
     login: async (req, res) => {
-        try {
-            const { email, password } = req.body;
+    try {
+      const { email, password } = req.body;
 
-            if (email === null || password === null) {
-                return res.status(400).json({ message: 'champs manquants' });
-            };
+      if (email == null || password == null) {
+        return res.status(400).json({ message: 'champs manquants' });
+      }
 
-            const user = await UserModel.findByEmail(email);
+      const user = await UserModel.findByEmail(email);
 
-            if (!user) {
-                return res.status(401).json({ message: 'identifiants incorrects' });
-            };
+      if (!user) {
+        return res.status(401).json({ message: 'identifiants incorrects' });
+      }
 
-            const validPwd = await bcrypt.compare(password, user.mot_de_passe);
+      // blocages des comptes désactivés
+      // On vérifie si la colonne est_actif est à false
+      if (user.est_actif === false) {
+        return res.status(403).json({ 
+          message: "Votre compte a été désactivé. Veuillez contacter l'administrateur." 
+        });
+      }
+      const validPwd = await bcrypt.compare(password, user.mot_de_passe);
 
-            if (!validPwd) {
-                return res.status(401).json({ message: 'mot de passe incorect' });
-            };
+      if (!validPwd) {
+        return res.status(401).json({ message: 'mot de passe incorrect' });
+      }
 
-            const token = jwt.sign(
-                {
-                    id: user.id_utilisateur,
-                    role: user.id_role,
+      const token = jwt.sign(
+        {
+          id: user.id_utilisateur,
+          role: user.id_role,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+      );
 
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: '24h' }
-            );
-
-            res.status(200).json({
-                message: 'Connexion réussie',
-                token: token,
-                user: {
-                    id: user.id_utilisateur,
-                    role: user.id_role,
-                    pseudo: user.pseudo
-                }
-            });
-
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: 'Erreur server' });
+      res.status(200).json({
+        message: 'Connexion réussie',
+        token: token,
+        user: {
+          id: user.id_utilisateur,
+          role: user.id_role,
+          pseudo: user.pseudo
         }
-    },
+      });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Erreur server' });
+    }
+  },
 
     register: async (req, res) => {
         // 1. On affiche la requête entrante
