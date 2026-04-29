@@ -41,6 +41,7 @@ class AuthService {
   // Deconnexion
   Future<void> logout() async {
     await storage.delete(key: 'jwt_token');
+    await storage.delete(key: 'userId');
   }
 
   Future<String?> register(String pseudo, String email, String password) async {
