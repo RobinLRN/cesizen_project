@@ -25,7 +25,7 @@ class CustomFullAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         flexibleSpace: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0, bottom: 20.0),
+            padding: const EdgeInsets.only(left: 25.0, right: 25.0, top: 10.0, bottom: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -5,6 +5,7 @@ import '../../views/login_screen.dart'; // Importe ta page de connexion
 import '../../views/placeholder_screen.dart';
 import '../../views/activity_screen.dart';
 import '../../views/diagnostic_start_screen.dart';
+import '../../views/profil_screen.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   const CustomNavigationBar({super.key});
@@ -43,7 +44,7 @@ class CustomNavigationBar extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       height: 80,
       decoration: BoxDecoration(
-        color: AppColors.tropicalTeal, // Ta couleur vert pétrole
+        color: AppColors.tropicalTeal, 
         borderRadius: BorderRadius.circular(40),
       ),
       child: Row(
@@ -62,7 +63,7 @@ class CustomNavigationBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: const BoxDecoration(
-                color: AppColors.softPeach, // Couleur beige/doré de ton design
+                color: AppColors.softPeach,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.home_filled, color: AppColors.tropicalTeal, size: 35),
@@ -72,7 +73,9 @@ class CustomNavigationBar extends StatelessWidget {
           _navItem(Icons.pie_chart_rounded, "Diagnostic", () {
              Navigator.push(context, MaterialPageRoute(builder: (context) => const DiagnosticStartScreen()));
           }),
-          _navItem(Icons.person_rounded, "Profil", () => _handleProfileNavigation(context)),
+          _navItem(Icons.person_rounded, "Profil", () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          }),
         ],
       ),
     );
