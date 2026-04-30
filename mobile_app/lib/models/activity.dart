@@ -26,19 +26,25 @@ class Activity {
   });
 
   factory Activity.fromJson(Map<String, dynamic> json) {
-    // On extrait la liste brute, ou on met une liste vide par défaut si elle n'existe pas
+    // 1. Sécurisation de la liste des catégories
     var list = json['categories'] as List? ?? [];
-    // On traduit chaque élément de la liste avec le modèle Category
     List<ActivityCategory> categoriesList = list.map((i) => ActivityCategory.fromJson(i)).toList();
 
+    // 2. Sécurisation absolue de la date (le coupable de ton crash précédent !)
+    // On force la conversion en String. Si c'est null, ça devient ""
+    String dateString = json['activity_date']?.toString() ?? ""; 
+    // tryParse ne crashera pas si c'est vide, il renverra juste null, qu'on remplace par DateTime.now()
+    DateTime parsedDate = DateTime.tryParse(dateString) ?? DateTime.now();
+
+    // 3. Sécurisation de tous les champs obligatoires avec "?? valeur_par_défaut"
     return Activity(
-      idActivity: json['id_activity'],
-      title: json['title'],
-      content: json['content'],
+      idActivity: json['id_activity'] ?? 0,
+      title: json['title'] ?? 'Sans titre',
+      content: json['content'] ?? '',
       coverImgLink: json['cover_img_link'],
-      activityDate: DateTime.parse(json['activity_date']),
+      activityDate: parsedDate,
       activityUrl: json['activity_url'],
-      idUtilisateur: json['id_utilisateur'],
+      idUtilisateur: json['id_utilisateur'] ?? 0,
       imageUrl: json['image_url'], 
       shortDescription: json['short_description'], 
       categories: categoriesList,
