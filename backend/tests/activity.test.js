@@ -4,6 +4,7 @@
 const request = require('supertest');
 const express = require('express');
 const activityRoute = require('../src/routes/activityRoute');
+const db = require('../src/config/db');
 
 // On prépare une application Express pour le test
 const app = express();
@@ -12,18 +13,18 @@ app.use(express.json());
 app.use('/api/activities', activityRoute);
 
 describe('Tests Fonctionnels - API Activités', () => {
-    
+
     it('GET /api/activities - devrait retourner la liste des activités avec un code 200', async () => {
         // on simule une requête GET
         const response = await request(app).get('/api/activities');
-        
+
         // Vérifications des résultats
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
 
         if (response.body.length > 0) {
             const firstActivity = response.body[0];
-            
+
             expect(firstActivity).toHaveProperty('id_activity');
             expect(firstActivity).toHaveProperty('title');
             expect(firstActivity).toHaveProperty('categories');
@@ -32,3 +33,4 @@ describe('Tests Fonctionnels - API Activités', () => {
     });
 
 });
+
