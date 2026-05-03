@@ -1,3 +1,17 @@
+-- Nettoyage : On supprime les tables existantes pour repartir à zéro
+-- L'ordre est important (on supprime les enfants avant les parents)
+DROP TABLE IF EXISTS type_dictionnary;
+DROP TABLE IF EXISTS favorite;
+DROP TABLE IF EXISTS article;
+DROP TABLE IF EXISTS activity;
+DROP TABLE IF EXISTS tracker;
+DROP TABLE IF EXISTS diagnostic;
+DROP TABLE IF EXISTS utilisateur;
+DROP TABLE IF EXISTS emotion;
+DROP TABLE IF EXISTS question;
+DROP TABLE IF EXISTS role;
+
+-- Création des tables
 CREATE TABLE role (
     id_role SERIAL PRIMARY KEY,
     nom_role VARCHAR(100)
