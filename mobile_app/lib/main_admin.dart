@@ -1,3 +1,5 @@
+//flutter run -d chrome -t lib/main_admin.dartx
+
 import 'package:flutter/material.dart';
 import 'backoffice/admin_auth_wrapper.dart';
 import 'ui/widgets/widgets.dart'; // ton thème existant

@@ -6,7 +6,7 @@ class AdminActivity {
   final String activityUrl;
   final String imageUrl;
   final int idCategory;
-  final int idUtilisateur; // Requis par votre backend
+  final int idUtilisateur;
   final bool estActive;
 
   AdminActivity({
@@ -29,7 +29,7 @@ class AdminActivity {
       shortDescription: json['short_description'] ?? '',
       activityUrl: json['activity_url'] ?? '',
       imageUrl: json['image_url'] ?? '',
-      idCategory: json['id_category'] ?? 1, // Valeur par défaut de sécurité
+      idCategory: json['id_category'] ?? 1,
       idUtilisateur: json['id_utilisateur'] ?? 1,
       estActive: json['est_active'] ?? true,
     );

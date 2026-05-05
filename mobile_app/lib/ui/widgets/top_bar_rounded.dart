@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// --- VERSION UNIQUE : BARRE AVEC LOGO ET ARC DE CERCLE ---
-// Ce composant utilise un CustomClipper pour créer une courbe fluide en bas.
 class CustomLogoAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
 

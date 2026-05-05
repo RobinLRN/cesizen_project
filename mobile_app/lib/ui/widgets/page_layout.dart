@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 class PageLayout extends StatelessWidget {
   final Widget child;
   final bool showAppBar;
-  final Color? backgroundColor; // 1. On ajoute cette variable optionnelle
+  final Color? backgroundColor;
 
   const PageLayout({
     super.key,
     required this.child,
     this.showAppBar = true,
-    this.backgroundColor, // 2. On l'ajoute au constructeur
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 3. Si une couleur est donnée, on l'utilise, sinon il prendra le blanc du thème
-      backgroundColor: backgroundColor, 
+      backgroundColor: backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
         child: child,

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/admin_activity_model.dart';
 import '../models/admin_category_model.dart';
-import '../../config.dart';
 
 class AdminActivityService {
   final String baseUrl = "http://localhost:3000/api/activities";
@@ -51,8 +50,10 @@ class AdminActivityService {
   }
 
   Future<List<AdminCategory>> fetchCategories() async {
-    final response = await http.get(Uri.parse("http://localhost:3000/api/categories")); 
-    
+    final response = await http.get(
+      Uri.parse("http://localhost:3000/api/categories"),
+    );
+
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((data) => AdminCategory.fromJson(data)).toList();
@@ -66,7 +67,6 @@ class AdminActivityService {
       Uri.parse('$baseUrl/$id'),
       headers: {"Content-Type": "application/json"},
     );
-    // 200 (OK) ou 204 (No Content) sont les codes habituels pour une suppression réussie
     if (response.statusCode != 200 && response.statusCode != 204) {
       throw Exception('Erreur lors de la suppression');
     }
