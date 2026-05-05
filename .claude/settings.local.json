@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(dir)",
-      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\robin\\\\Documents\\\\GitHub\\\\cesizen_project\" -Recurse -Depth 2 -Directory)",
-      "Bash(Select-Object -ExpandProperty Name)"
-    ]
-  }
-}
