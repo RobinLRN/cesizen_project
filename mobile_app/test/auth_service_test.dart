@@ -14,10 +14,10 @@ class FakeSecureStorage extends FlutterSecureStorage {
     required String key,
     required String? value,
     AndroidOptions? aOptions,
-    AppleOptions? iOptions, // ← AppleOptions au lieu de IOSOptions
+    AppleOptions? iOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    AppleOptions? mOptions, // ← AppleOptions au lieu de MacOsOptions
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async {
     if (value != null) _data[key] = value;
@@ -27,10 +27,10 @@ class FakeSecureStorage extends FlutterSecureStorage {
   Future<String?> read({
     required String key,
     AndroidOptions? aOptions,
-    AppleOptions? iOptions, // ← AppleOptions
+    AppleOptions? iOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    AppleOptions? mOptions, // ← AppleOptions
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async => _data[key];
 
@@ -38,16 +38,15 @@ class FakeSecureStorage extends FlutterSecureStorage {
   Future<void> delete({
     required String key,
     AndroidOptions? aOptions,
-    AppleOptions? iOptions, // ← AppleOptions
+    AppleOptions? iOptions,
     LinuxOptions? lOptions,
     WebOptions? webOptions,
-    AppleOptions? mOptions, // ← AppleOptions
+    AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async => _data.remove(key);
 }
 
 void main() {
-  // ← une seule instance réutilisée dans tous les tests
   late FakeSecureStorage fakeStorage;
 
   setUp(() {
@@ -68,7 +67,6 @@ void main() {
         );
       });
 
-      // ← on injecte les deux fakes
       final authService = AuthService(client: mockClient, storage: fakeStorage);
       final result = await authService.login('test@test.com', 'password123');
 
@@ -97,7 +95,7 @@ void main() {
       expect(result, false);
     });
 
-    // ✅ BONUS : vérifie que le token est bien sauvegardé après login
+    // vérifie que le token est bien sauvegardé après login
     test('sauvegarde le token et le pseudo après un login réussi', () async {
       final mockClient = MockClient((request) async {
         return http.Response(

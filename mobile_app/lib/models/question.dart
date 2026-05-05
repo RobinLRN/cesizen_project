@@ -2,7 +2,7 @@ class Question {
   final int idQuestion;
   final String contenu;
   final int valScore;
-  bool isSelected; // Champ local pour gérer les cases à cocher dans l'UI
+  bool isSelected;
 
   Question({
     required this.idQuestion,

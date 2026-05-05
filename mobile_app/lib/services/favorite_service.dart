@@ -5,15 +5,14 @@ class FavoriteService {
   final String baseUrl = 'http://10.0.2.2:3000/api/favorite';
   final http.Client _client; // ← ajoute
 
-  FavoriteService({http.Client? client})
-    : _client = client ?? http.Client(); // ← ajoute
+  FavoriteService({http.Client? client}) : _client = client ?? http.Client();
 
   Future<bool> checkIsFavorite(int userId, int activityId) async {
     try {
       final url = Uri.parse(
         '$baseUrl/check?id_utilisateur=$userId&id_activity=$activityId',
       );
-      final response = await _client.get(url); // ← _client.get
+      final response = await _client.get(url);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['isFavorite'] ?? false;

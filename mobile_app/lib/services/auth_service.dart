@@ -4,10 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config.dart';
 
 class AuthService {
-  final FlutterSecureStorage _storage; // ← plus de "final storage = const..."
+  final FlutterSecureStorage _storage;
   final http.Client _client;
 
-  // ← les deux sont maintenant injectables
   AuthService({http.Client? client, FlutterSecureStorage? storage})
     : _client = client ?? http.Client(),
       _storage = storage ?? const FlutterSecureStorage();

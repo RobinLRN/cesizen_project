@@ -9,7 +9,6 @@ class DiagnosticStartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.tropicalTeal,
-      // AppBar standard pour la flèche de retour
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -27,21 +26,29 @@ class DiagnosticStartScreen extends StatelessWidget {
               Column(
                 children: [
                   const SizedBox(height: 20),
-                  const Icon(Icons.timeline_rounded, size: 100, color: Colors.white),
+                  const Icon(
+                    Icons.timeline_rounded,
+                    size: 100,
+                    color: Colors.white,
+                  ),
                   const SizedBox(height: 40),
                   Text(
                     'Echelle de stress',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const Text(
                     'Ce test de Holmes & Rahe évalue votre charge mentale basée sur les évènements des 12 derniers mois.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white70, fontSize: 16, height: 1.5),
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                      height: 1.5,
+                    ),
                   ),
                 ],
               ),
@@ -52,14 +59,19 @@ class DiagnosticStartScreen extends StatelessWidget {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () => Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (context) => const DiagnosticQuestionnaireScreen())
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const DiagnosticQuestionnaireScreen(),
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.softPeach.withOpacity(0.3),
                         foregroundColor: Colors.white,
                         side: const BorderSide(color: Colors.white24),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         elevation: 0,
                       ),
                       child: const Row(

@@ -10,10 +10,7 @@ import '../ui/theme.dart';
 class ActivityDetailScreen extends StatefulWidget {
   final Activity activity;
 
-  const ActivityDetailScreen({
-    super.key,
-    required this.activity,
-  });
+  const ActivityDetailScreen({super.key, required this.activity});
 
   @override
   State<ActivityDetailScreen> createState() => _ActivityDetailScreenState();
@@ -28,7 +25,7 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
   final FavoriteService _favoriteService = FavoriteService();
   bool _isFavorite = false;
   bool _isLoadingFavorite = true;
-  
+
   final _storage = const FlutterSecureStorage(); // Instance du coffre-fort
   int? _userId; // Variable dynamique, vide au départ
 
@@ -42,7 +39,9 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
     // 2. Préparation du lecteur vidéo
     if (widget.activity.activityUrl != null &&
         widget.activity.activityUrl!.isNotEmpty) {
-      final videoId = YoutubePlayer.convertUrlToId(widget.activity.activityUrl!);
+      final videoId = YoutubePlayer.convertUrlToId(
+        widget.activity.activityUrl!,
+      );
 
       if (videoId != null) {
         _youtubeController = YoutubePlayerController(
@@ -59,14 +58,13 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
   // Nouvelle fonction pour lire le coffre-fort
   void _initializeUserData() async {
-    // ⚠️ ATTENTION ICI : Assure-toi que 'userId' est bien la clé que tu utilises lors du login
-    String? storedId = await _storage.read(key: 'userId'); 
+    String? storedId = await _storage.read(key: 'userId');
 
     if (storedId != null && mounted) {
       setState(() {
         _userId = int.tryParse(storedId);
       });
-      // Maintenant que nous avons le vrai ID, on charge le statut
+      // on charge le statut
       if (_userId != null) {
         _loadFavoriteStatus();
       }
@@ -80,9 +78,11 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
 
   // Fonction pour vérifier le statut de favori
   void _loadFavoriteStatus() async {
-    // _userId est garanti non nul ici grâce à la vérification précédente
-    final isFav = await _favoriteService.checkIsFavorite(_userId!, widget.activity.idActivity);
-    
+    final isFav = await _favoriteService.checkIsFavorite(
+      _userId!,
+      widget.activity.idActivity,
+    );
+
     if (mounted) {
       setState(() {
         _isFavorite = isFav;
@@ -96,7 +96,9 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
     // Sécurité : on bloque si l'utilisateur n'est pas identifié
     if (_userId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez vous connecter pour ajouter aux favoris')),
+        const SnackBar(
+          content: Text('Veuillez vous connecter pour ajouter aux favoris'),
+        ),
       );
       return;
     }
@@ -105,15 +107,18 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
       _isFavorite = !_isFavorite;
     });
 
-    final result = await _favoriteService.toggleFavorite(_userId!, widget.activity.idActivity);
+    final result = await _favoriteService.toggleFavorite(
+      _userId!,
+      widget.activity.idActivity,
+    );
 
     if (mounted && result != _isFavorite) {
       setState(() {
         _isFavorite = result;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erreur réseau')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Erreur réseau')));
     }
   }
 
@@ -143,7 +148,9 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
-                    strokeWidth: 2, color: AppColors.softPeach),
+                  strokeWidth: 2,
+                  color: AppColors.softPeach,
+                ),
               )
             : GestureDetector(
                 onTap: _toggleFavorite,
@@ -164,15 +171,16 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.16),
-                        blurRadius: 4,
-                        spreadRadius: 0,
-                        offset: Offset(0, 1),
-                      )
-                    ]),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.16),
+                      blurRadius: 4,
+                      spreadRadius: 0,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: hasVideo
@@ -189,28 +197,35 @@ class _ActivityDetailScreenState extends State<ActivityDetailScreen> {
                           ),
                         )
                       : (widget.activity.imageUrl != null
-                          ? Image.network(
-                              widget.activity.imageUrl!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(Icons.image_not_supported, size: 50),
-                                );
-                              },
-                            )
-                          : Container(
-                              color: Colors.grey[300],
-                              child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                            )),
+                            ? Image.network(
+                                widget.activity.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(
+                                      Icons.image_not_supported,
+                                      size: 50,
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(
+                                color: Colors.grey[300],
+                                child: const Icon(
+                                  Icons.image,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              )),
                 ),
               ),
               const SizedBox(height: 30),
               Text(
                 'Description',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 15),
               Container(

@@ -2,9 +2,8 @@ import 'package:cesizen/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class DiagInput extends StatelessWidget {
-  final String label; // Le titre au-dessus (ex: "Inputs" ou "Email")
+  final String label;
   final String hint;
   final TextEditingController controller;
   final IconData? icon;
@@ -12,19 +11,17 @@ class DiagInput extends StatelessWidget {
 
   const DiagInput({
     super.key,
-    required this.label, // Nouveau paramètre obligatoire
+    required this.label,
     required this.hint,
     required this.controller,
     this.icon,
     this.validator,
   });
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // Aligne le titre à gauche
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Le titre de l'input
         Text(
@@ -35,7 +32,7 @@ class DiagInput extends StatelessWidget {
             color: AppColors.tropicalTeal,
           ),
         ),
-        const SizedBox(height: 10), // Espace entre le titre et l'input
+        const SizedBox(height: 10),
         TextFormField(
           controller: controller,
           validator: validator,
@@ -48,7 +45,9 @@ class DiagInput extends StatelessWidget {
           //default input style
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: icon != null ? Icon(icon, color: AppColors.drySage) : null,
+            prefixIcon: icon != null
+                ? Icon(icon, color: AppColors.drySage)
+                : null,
             hintStyle: GoogleFonts.merriweatherSans(
               color: AppColors.drySage,
               fontSize: 16,

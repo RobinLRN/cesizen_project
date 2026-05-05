@@ -10,7 +10,6 @@ app.use(express.json());
 app.use('/api/auth', authRoute);
 
 // On crée une fausse route uniquement pour ce test.
-// Elle passe par ton middleware. Si le middleware l'accepte, elle renvoie juste un code 200.
 app.get('/api/test-protection', authMiddleware, (req, res) => {
     res.status(200).json({ message: 'Succès : le middleware a laissé passer !' });
 });
@@ -31,7 +30,7 @@ describe('Tests Non-Régression - Middleware JWT en isolation', () => {
     // Sans token
 
     it('refuse l\'accès sans token (401)', async () => {
-        const res = await request(app).get('/api/test-protection'); // Plus de payload nécessaire
+        const res = await request(app).get('/api/test-protection');
         expect(res.statusCode).toBe(401);
     });
 
@@ -73,8 +72,6 @@ describe('Tests Non-Régression - Middleware JWT en isolation', () => {
             .get('/api/test-protection')
             .set('Authorization', `Bearer ${validToken}`);
 
-        // Si le status est 200, ça veut dire que le middleware a fait un `next()`
-        // et que notre fausse route a pu répondre.
         expect(res.statusCode).toBe(200);
         expect(res.body.message).toBe('Succès : le middleware a laissé passer !');
     });
