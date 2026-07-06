@@ -15,6 +15,7 @@ const categoryRoute = require('./src/routes/categoryRoute');
 const favoriteRoute = require('./src/routes/favoriteRoute');
 const diagnosticRoute = require('./src/routes/diagnosticRoute');
 const userRoute = require('./src/routes/userRoute');
+const supportRoute = require('./src/routes/supportRoute');
 
 // middleware
 app.use(express.json());
@@ -338,6 +339,7 @@ app.use('/api/categories', categoryRoute);
 app.use('/api/favorite', favoriteRoute);
 app.use('/api/diagnostic', diagnosticRoute);
 app.use('/api/users', userRoute);
+app.use('/api/support', supportRoute);
 
 // Connexion à la DB
 pool.connect((err, client, release) => {

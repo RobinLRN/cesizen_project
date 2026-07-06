@@ -2,26 +2,22 @@ import 'package:cesizen/ui/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FormInput extends StatelessWidget {
+// Menu déroulant stylé pour rester cohérent avec FormInput.
+// `items` associe une clé technique (envoyée au backend) à un libellé affiché.
+class FormDropdown extends StatelessWidget {
   final String label;
-  final String hint;
-  final TextEditingController controller;
+  final String value;
+  final Map<String, String> items;
+  final ValueChanged<String?> onChanged;
   final IconData? icon;
-  final String? Function(String?)? validator;
-  final Widget? suffixIcon;
-  final bool obscureText;
-  final int maxLines;
 
-  const FormInput({
+  const FormDropdown({
     super.key,
     required this.label,
-    required this.hint,
-    required this.controller,
+    required this.value,
+    required this.items,
+    required this.onChanged,
     this.icon,
-    this.validator,
-    this.obscureText = false,
-    this.suffixIcon,
-    this.maxLines = 1,
   });
 
   @override
@@ -38,27 +34,19 @@ class FormInput extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          obscureText: obscureText,
-          // Un champ masqué (mot de passe) reste toujours sur une seule ligne.
-          maxLines: obscureText ? 1 : maxLines,
-          keyboardType: maxLines > 1 ? TextInputType.multiline : null,
+        DropdownButtonFormField<String>(
+          initialValue: value,
+          isExpanded: true,
+          dropdownColor: Colors.white,
+          icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.darkCyan),
           style: GoogleFonts.merriweatherSans(
-            color: AppColors.softPeach,
+            color: AppColors.darkCyan,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
           decoration: InputDecoration(
-            hintText: hint,
-            prefixIcon: icon != null ? Icon(icon, color: AppColors.darkCyan) : null,
-            suffixIcon: suffixIcon,
-            hintStyle: GoogleFonts.merriweatherSans(
-              color: AppColors.drySage,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            prefixIcon:
+                icon != null ? Icon(icon, color: AppColors.darkCyan) : null,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(50),
               borderSide: BorderSide(color: AppColors.drySage, width: 1.5),
@@ -68,6 +56,15 @@ class FormInput extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.drySage, width: 2.0),
             ),
           ),
+          items: items.entries
+              .map(
+                (entry) => DropdownMenuItem<String>(
+                  value: entry.key,
+                  child: Text(entry.value),
+                ),
+              )
+              .toList(),
+          onChanged: onChanged,
         ),
       ],
     );
