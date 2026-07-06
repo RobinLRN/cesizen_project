@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'backoffice/admin_auth_wrapper.dart';
-import 'ui/widgets/widgets.dart'; // ton thème existant
+import 'ui/widgets/widgets.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class AdminApp extends StatelessWidget {
       title: 'CesiZen Admin',
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const AdminAuthWrapper(), // ← c'est tout
+      home: const AdminAuthWrapper(), 
     );
   }
 }

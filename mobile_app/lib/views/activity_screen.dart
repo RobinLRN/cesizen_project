@@ -26,13 +26,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
     _screenDataFuture = _loadScreenData();
   }
 
-  Future <Map<String, dynamic>> _loadScreenData() async {
-    final activities = await _activityService.getActivities();
-    final categories = await _categoryService.getCategories();
+  Future<Map<String, dynamic>> _loadScreenData() async {
+    final results = await Future.wait([
+      _activityService.getActivities(),
+      _categoryService.getCategories(),
+    ]);
 
     return {
-      'activities':activities,
-      'categories':categories,
+      'activities': results[0],
+      'categories': results[1],
     };
   }
 

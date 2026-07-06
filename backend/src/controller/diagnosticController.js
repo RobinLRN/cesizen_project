@@ -36,6 +36,15 @@ exports.saveDiagnostic = async (req, res) => {
     }
 };
 
+exports.getConfig = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM diagnostic_config ORDER BY nv_stress ASC');
+        res.status(200).json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // Mettre à jour les titres et descriptions des paragraphes du diagnostic
 exports.updateConfig = async (req, res) => {
     const { id } = req.params;

@@ -1,0 +1,19 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CesiZen (App)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": ["-d", "chrome"]
+    },
+    {
+      "name": "CesiZen (Admin)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_admin.dart",
+      "args": ["-d", "chrome"]
+    }
+  ]
+}

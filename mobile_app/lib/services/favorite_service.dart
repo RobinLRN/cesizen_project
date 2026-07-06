@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config.dart';
 
 class FavoriteService {
-  final String baseUrl = 'http://10.0.2.2:3000/api/favorite';
+  String get baseUrl => '${Config.apiBaseUrl}/favorite';
   final http.Client _client; // ← ajoute
 
   FavoriteService({http.Client? client}) : _client = client ?? http.Client();

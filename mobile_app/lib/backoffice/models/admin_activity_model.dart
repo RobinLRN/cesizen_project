@@ -22,6 +22,8 @@ class AdminActivity {
   });
 
   factory AdminActivity.fromJson(Map<String, dynamic> json) {
+    final categories = json['categories'] as List? ?? [];
+    final firstCategory = categories.isNotEmpty ? categories[0] : null;
     return AdminActivity(
       id: json['id_activity'],
       title: json['title'] ?? '',
@@ -29,7 +31,7 @@ class AdminActivity {
       shortDescription: json['short_description'] ?? '',
       activityUrl: json['activity_url'] ?? '',
       imageUrl: json['image_url'] ?? '',
-      idCategory: json['id_category'] ?? 1,
+      idCategory: firstCategory?['id_category'] ?? 1,
       idUtilisateur: json['id_utilisateur'] ?? 1,
       estActive: json['est_active'] ?? true,
     );

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
+import '../../config.dart';
 
 class AdminUserService {
-  final String baseUrl = "http://localhost:3000/api/users";
+  String get baseUrl => '${Config.apiBaseUrl}/users';
 
   Future<List<AdminUser>> fetchUsers() async {
     final response = await http.get(Uri.parse(baseUrl));

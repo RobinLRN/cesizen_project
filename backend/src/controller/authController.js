@@ -93,7 +93,7 @@ const authController = {
             if (!valid) return res.status(401).json({ error: 'Identifiants invalides' });
 
             const token = jwt.sign(
-                { userId: user.id_utilisateur, role: 'admin' },
+                { id: user.id_utilisateur, role: user.id_role },
                 process.env.JWT_SECRET,
                 { expiresIn: '8h' }
             );
