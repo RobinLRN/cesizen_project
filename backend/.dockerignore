@@ -1,0 +1,9 @@
+#Fichiers à ne pas copier dans l'image
+node_modules
+npm-debug.log
+#On ne met jamais de secret dans une image
+.env
+.env.*
+!.env.example
+Dockerfile
+.dockerignore

@@ -1,0 +1,50 @@
+# Décrit les services et les relie sur un réseau commun
+services:
+  db:
+    image: postgres:15.3-alpine
+    container_name: cesizen_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cesizen_net
+
+  backend:
+    build: ./backend
+    container_name: cesizen_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      TOKEN_HEADER_KEY: ${TOKEN_HEADER_KEY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_REPO: ${GITHUB_REPO}
+    ports:
+      - "3000:3000"
+    networks:
+      - cesizen_net
+
+volumes:
+  db_data:
+
+networks:
+  cesizen_net:
+    driver: bridge
