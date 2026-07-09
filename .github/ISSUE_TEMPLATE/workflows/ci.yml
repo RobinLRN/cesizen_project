@@ -1,0 +1,68 @@
+name: CI
+
+# Quand déclencher le pipeline
+on:
+  push:
+    branches: [Dev, main]
+  pull_request:
+    branches: [Dev, main]
+
+jobs:
+  test:
+    name: Build & Tests
+    runs-on: ubuntu-latest
+
+    # Une base PostgreSQL temporaire, le temps du pipeline
+    services:
+      postgres:
+        image: postgres:15.3-alpine
+        env:
+          POSTGRES_USER: cesizen_app
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: cesizen
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cesizen_app -d cesizen"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # Récupérer le code du dépôt
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      # Installer Node.js 22 (+ cache des dépendances)
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      # Charger le schéma puis les données dans la base
+      - name: Initialiser la base de données
+        env:
+          PGPASSWORD: ci_password
+        run: |
+          psql -h localhost -U cesizen_app -d cesizen -f database/init_db.sql
+          psql -h localhost -U cesizen_app -d cesizen -f database/seed.sql
+
+      # Installer les dépendances du backend
+      - name: Installer les dépendances
+        working-directory: backend
+        run: npm ci
+
+      # Lancer les tests automatisés
+      - name: Lancer les tests
+        working-directory: backend
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: cesizen_app
+          DB_PASSWORD: ci_password
+          DB_NAME: cesizen
+          JWT_SECRET: ci_test_secret_not_for_production
+          TOKEN_HEADER_KEY: token
+        run: npm test
