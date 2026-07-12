@@ -16,8 +16,7 @@ pool.connect((err, client, release) => {
         return console.error('Error db connection', err.stack);
     }
     console.log('Connected to the database');
-
-   
+    release();
 });
 
  module.exports = pool;

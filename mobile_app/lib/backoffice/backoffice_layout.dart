@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'views/user_management_page.dart';
 import 'views/activity_management_page.dart';
+import 'views/diagnostic_config_page.dart';
 
 class BackOfficeLayout extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _BackOfficeLayoutState extends State<BackOfficeLayout> {
   final List<Widget> _pages = [
     const UserManagementPage(),
     const ActivityManagementPage(),
-    Center(child: Text("Configuration Diagnostic")),
+    const DiagnosticConfigPage(),
   ];
 
   @override

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../config.dart';
 import '../models/question.dart';
 
 class DiagnosticService {
-  final String baseUrl = "http://10.0.2.2:3000/api/diagnostic";
+  String get baseUrl => '${Config.apiBaseUrl}/diagnostic';
   final _storage = const FlutterSecureStorage();
 
   // Récupérer toutes les questions
@@ -21,6 +22,33 @@ class DiagnosticService {
     } catch (e) {
       print("Erreur DiagnosticService (fetch): $e");
       return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchConfig() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/config'));
+      if (response.statusCode == 200) {
+        return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      }
+      return [];
+    } catch (e) {
+      print('Erreur fetchConfig: $e');
+      return [];
+    }
+  }
+
+  Future<bool> updateConfig(int id, String titre, String description) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/config/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'titre': titre, 'description': description}),
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      print('Erreur updateConfig: $e');
+      return false;
     }
   }
 

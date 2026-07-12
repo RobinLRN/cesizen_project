@@ -1,0 +1,71 @@
+name: "🐞 Rapport de bug"
+description: "Signaler un dysfonctionnement dans l'application CESIZen"
+title: "[Bug] : "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler ce problème.
+        Plus votre description est précise, plus la correction sera rapide.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du problème
+      description: Décrivez clairement ce qui ne fonctionne pas.
+      placeholder: "Ex : l'application se ferme lorsque j'ouvre le diagnostic."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Étapes pour reproduire
+      description: Comment reproduire le bug, étape par étape.
+      placeholder: |
+        1. Aller sur '...'
+        2. Cliquer sur '...'
+        3. Observer l'erreur '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: attendu
+    attributes:
+      label: Comportement attendu
+      description: Que devrait-il se passer normalement ?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: composant
+    attributes:
+      label: Composant concerné
+      options:
+        - Application mobile (Flutter)
+        - Back-office (administration)
+        - API / Backend (Node.js)
+        - Base de données
+        - Je ne sais pas
+    validations:
+      required: true
+
+  - type: dropdown
+    id: gravite
+    attributes:
+      label: Gravité
+      options:
+        - Bloquant (l'app est inutilisable)
+        - Majeur (fonctionnalité importante KO)
+        - Mineur (gêne, contournement possible)
+        - Cosmétique (affichage)
+    validations:
+      required: true
+
+  - type: input
+    id: environnement
+    attributes:
+      label: Environnement
+      description: Appareil, version de l'app, système d'exploitation.
+      placeholder: "Ex : Android 14, CESIZen v1.0.0"

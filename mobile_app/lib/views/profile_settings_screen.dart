@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../ui/widgets/page_layout.dart';
 import '../ui/widgets/widgets.dart';
-import '../ui/theme.dart';
 import '../services/auth_service.dart';
+import 'support_form_screen.dart';
 
 class ProfileSettingsScreen extends StatelessWidget {
   const ProfileSettingsScreen({super.key});
@@ -104,6 +104,29 @@ class ProfileSettingsScreen extends StatelessWidget {
               _buildSettingsItem("Cookies", () {}),
               _buildSettingsItem("Politique de confidentialité", () {}),
               _buildSettingsItem("Aide et FAQ", () {}),
+
+              const SizedBox(height: 20),
+
+              // Section Assistance
+              const Padding(
+                padding: EdgeInsets.only(left: 20, bottom: 10),
+                child: Text(
+                  "Assistance",
+                  style: TextStyle(
+                    color: AppColors.darkCyan,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              _buildSettingsItem(
+                "Signaler un problème",
+                () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SupportFormScreen(),
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 20),
 

@@ -1,0 +1,45 @@
+name: "✨ Demande d'évolution"
+description: "Proposer une nouvelle fonctionnalité ou une amélioration"
+title: "[Évolution] : "
+labels: ["evolution"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci pour votre proposition d'amélioration de CESIZen.
+
+  - type: textarea
+    id: besoin
+    attributes:
+      label: Besoin / problème à résoudre
+      description: Quel besoin cette évolution vient-elle satisfaire ?
+      placeholder: "Ex : les utilisateurs souhaitent un historique de leurs diagnostics."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution proposée
+      description: Décrivez la fonctionnalité souhaitée.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priorite
+    attributes:
+      label: Priorité estimée
+      options:
+        - Haute
+        - Moyenne
+        - Basse
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagées
+      description: Avez-vous pensé à d'autres approches ? (facultatif)
+    validations:
+      required: false

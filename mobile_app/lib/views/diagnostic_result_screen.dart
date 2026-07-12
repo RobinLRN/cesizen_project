@@ -13,51 +13,65 @@ class DiagnosticResultScreen extends StatefulWidget {
 
 class _DiagnosticResultScreenState extends State<DiagnosticResultScreen> {
   final DiagnosticService _diagnosticService = DiagnosticService();
+  List<Map<String, dynamic>> _configs = [];
+
+  static const _fallback = [
+    {
+      'titre': 'Moins de 100 points : stress modéré, risque de 30 %',
+      'description': 'Avec un score inférieur à 100, le risque de développer une maladie somatique est faible.',
+    },
+    {
+      'titre': 'Entre 100 et 300 points : stress élevé, risque de 51 %',
+      'description': 'Cependant, avec un score entre 100 et 300, le risque de déclencher une maladie somatique reste statistiquement significatif.',
+    },
+    {
+      'titre': 'Plus de 300 points : stress très élevé, risque de 80 %',
+      'description': 'Si votre score de stress au cours des 24 derniers mois dépasse 300, vous êtes exposé à un risque très élevé de développer une maladie somatique prochainement.',
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
     _saveScore();
+    _loadConfig();
   }
 
-  // Vérifier la connexion avant de sauvegarder
   void _saveScore() async {
     const storage = FlutterSecureStorage();
-    String? userId = await storage.read(key: 'userId');
-
+    final userId = await storage.read(key: 'userId');
     if (userId != null) {
-      // L'utilisateur est connecté, on enregistre vraiment
       await _diagnosticService.saveResult(widget.score);
-      print("Score enregistré pour l'utilisateur $userId");
-    } else {
-      // Mode invité : on se contente d'afficher le score à l'écran
-      print("Mode invité : Affichage du score sans enregistrement en base.");
+    }
+  }
+
+  void _loadConfig() async {
+    final configs = await _diagnosticService.fetchConfig();
+    if (mounted && configs.isNotEmpty) {
+      setState(() { _configs = configs; });
     }
   }
 
   Map<String, dynamic> _getResultData() {
+    int configIndex;
+    Color color;
     if (widget.score < 100) {
-      return {
-        'title': 'Moins de 100 points : stress modéré, risque de 30 %',
-        'desc':
-            'Avec un score inférieur à 100, le risque de développer une maladie somatique est faible.',
-        'color': AppColors.tropicalTeal,
-      };
+      configIndex = 0;
+      color = AppColors.tropicalTeal;
     } else if (widget.score <= 300) {
-      return {
-        'title': 'Entre 100 et 300 points : stress élevé, risque de 51 %',
-        'desc':
-            'Cependant, avec un score entre 100 et 300, le risque de déclencher une maladie somatique reste statistiquement significatif.',
-        'color': AppColors.softPeach, // Couleur Soft Peach pour Medium
-      };
+      configIndex = 1;
+      color = AppColors.softPeach;
     } else {
-      return {
-        'title': 'Plus de 300 points : stress très élevé, risque de 80 %',
-        'desc':
-            'Si votre score de stress au cours des 24 derniers mois dépasse 300, vous êtes exposé à un risque très élevé de développer une maladie somatique prochainement.',
-        'color': const Color(0xFF9BA08D), // Couleur "Dry Sage" pour Bad
-      };
+      configIndex = 2;
+      color = const Color(0xFF9BA08D);
     }
+
+    final source = _configs.isNotEmpty ? _configs[configIndex] : _fallback[configIndex];
+    return {
+      'title': source['titre'],
+      'desc': source['description'],
+      'color': color,
+    };
   }
 
   @override
@@ -147,7 +161,7 @@ class _DiagnosticResultScreenState extends State<DiagnosticResultScreen> {
                     onPressed: () =>
                         Navigator.pushNamed(context, '/activities'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
                       foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(

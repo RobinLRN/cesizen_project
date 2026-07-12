@@ -7,7 +7,7 @@ class AdminCategory {
   factory AdminCategory.fromJson(Map<String, dynamic> json) {
     return AdminCategory(
       id: json['id_category'],
-      title: json['title'] ?? json['nom_role'] ?? 'Sans nom',
+      title: json['title'] ?? 'Sans nom',
     );
   }
 }
