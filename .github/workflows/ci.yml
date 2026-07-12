@@ -1,6 +1,5 @@
 name: CI
 
-# Quand déclencher le pipeline
 on:
   push:
     branches: [Dev, main]
@@ -9,10 +8,9 @@ on:
 
 jobs:
   test:
-    name: Build & Tests
+    name: Build, Tests & Analyse
     runs-on: ubuntu-latest
 
-    # Une base PostgreSQL temporaire, le temps du pipeline
     services:
       postgres:
         image: postgres:15.3-alpine
@@ -29,9 +27,11 @@ jobs:
           --health-retries 5
 
     steps:
-      # Récupérer le code du dépôt
+      # Récupérer le code (historique complet requis par SonarCloud)
       - name: Récupérer le code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # Installer Node.js 22 (+ cache des dépendances)
       - name: Installer Node.js
@@ -66,3 +66,9 @@ jobs:
           JWT_SECRET: ci_test_secret_not_for_production
           TOKEN_HEADER_KEY: token
         run: npm test
+
+      # Analyse de sécurité et qualité (SAST) avec SonarQube Cloud
+      - name: Analyse SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
