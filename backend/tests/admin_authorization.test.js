@@ -1,30 +1,19 @@
 // Test de sécurité (OWASP A01 - Broken Access Control) :
 // vérifie que les routes d'administration sont réservées aux administrateurs.
+// On forge directement les jetons : on teste l'AUTORISATION par rôle, pas la connexion.
 const request = require('supertest');
 const express = require('express');
-const authRoute = require('../src/routes/authRoute');
+const jwt = require('jsonwebtoken');
 const userRoute = require('../src/routes/userRoute');
+require('dotenv').config();
 
-// On reconstruit une app minimale, branchée comme dans app.js
 const app = express();
 app.use(express.json());
-app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 
-let userToken = '';   // utilisateur standard (rôle 2)
-let adminToken = '';  // administrateur (rôle 1)
-
-beforeAll(async () => {
-    const user = await request(app)
-        .post('/api/auth/login')
-        .send({ email: 'user@test.com', password: '123' });
-    userToken = user.body.token;
-
-    const admin = await request(app)
-        .post('/api/auth/login')
-        .send({ email: 'admin@cesizen.fr', password: 'password123' });
-    adminToken = admin.body.token;
-});
+// Jetons valides (signés avec le vrai secret), avec des rôles différents
+const userToken = jwt.sign({ id: 999, role: 2 }, process.env.JWT_SECRET, { expiresIn: '1h' });   // utilisateur standard
+const adminToken = jwt.sign({ id: 1, role: 1 }, process.env.JWT_SECRET, { expiresIn: '1h' });     // administrateur
 
 describe("Contrôle d'accès (OWASP A01) - routes administrateur", () => {
 
