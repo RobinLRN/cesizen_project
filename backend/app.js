@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -327,19 +329,51 @@ const swaggerOptions = {
   apis: [],
 };
 
-app.use(cors());
+// --- Sécurité HTTP ---
+// En-têtes de sécurité (protège contre XSS, clickjacking, sniffing MIME, etc.)
+app.use(helmet());
+
+// CORS : ouvert par défaut (développement). En production, définir la variable
+// ALLOWED_ORIGINS (liste séparée par des virgules) pour restreindre l'accès
+// aux seules origines de confiance.
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
+  : null;
+app.use(cors({ origin: allowedOrigins || true, credentials: true }));
+
+// Limitation du débit sur les routes sensibles (anti-bruteforce / anti-spam)
+const sensitiveLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // fenêtre de 15 minutes
+  max: 20, // 20 requêtes par IP et par fenêtre
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Trop de tentatives. Veuillez réessayer plus tard.' },
+});
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Routes API
-app.use('/api/auth', authRoute);
+app.use('/api/auth', sensitiveLimiter, authRoute);
 app.use('/api/activities', activityRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/favorite', favoriteRoute);
 app.use('/api/diagnostic', diagnosticRoute);
 app.use('/api/users', userRoute);
-app.use('/api/support', supportRoute);
+app.use('/api/support', sensitiveLimiter, supportRoute);
+
+// --- Gestion des erreurs (aucun détail technique n'est renvoyé au client) ---
+// Route non trouvée (404)
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ressource introuvable.' });
+});
+
+// Gestionnaire d'erreurs global (500)
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error('Erreur non gérée :', err);
+  res.status(500).json({ message: 'Erreur serveur.' });
+});
 
 // Connexion à la DB
 pool.connect((err, client, release) => {
